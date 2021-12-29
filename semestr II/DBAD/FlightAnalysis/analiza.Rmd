@@ -1,0 +1,112 @@
+---
+title: "Analiza"
+author: "Bartosz Bronikowski"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup,echo =FALSE, include=TRUE, cache = FALSE}
+library(DBI)
+library(odbc)
+con <- dbConnect(odbc(), 
+                 Driver = "", # add Driver
+                 Server = "", # add Server
+                 Database = "", # add Database
+                 Trusted_Connection = "True")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{sql,,echo =FALSE, connection=con,output.var="d1"}
+Select avg(arr_delay_new) From Flight_delays;
+```
+
+
+```{sql,,echo =FALSE, connection=con,output.var="d2"}
+Select max(arr_delay_new) From Flight_delays;
+```
+```{sql,,echo =FALSE, connection=con,output.var="d3"}
+select  arr_delay_new,fl_date,carrier, origin_city_name,dest_city_name
+from Flight_delays
+where arr_delay_new = (select max(arr_delay_new) from Flight_delays);
+```
+
+```{sql,,echo =FALSE, connection=con,output.var="d4"}
+select  avg(arr_delay_new) as avg_delay,weekday_name
+from Weekdays
+         inner join Flight_delays on weekday_id = Flight_delays.day_of_week
+group by weekday_name
+order by [avg_delay] desc;
+```
+```{sql,,echo =FALSE, connection=con,output.var="d5"}
+select avg(arr_delay_new) as avg_delay,airline_name
+from Flight_delays
+         inner join Airlines A on Flight_delays.airline_id = A.airline_id
+group by airline_name
+order by [avg_delay] desc;
+```
+
+
+```{sql,,echo =FALSE, connection=con,output.var="d7"}
+select ((SUM(arr_delay_new * dep_delay_new)
+    - (SUM(arr_delay_new) * SUM(dep_delay_new)) / COUNT(*)
+    )
+           )
+           / (SQRT(SUM(arr_delay_new * arr_delay_new)
+        - (SUM(arr_delay_new) * SUM(arr_delay_new)) / COUNT(*)
+                  )
+        * SQRT(SUM(dep_delay_new * dep_delay_new)
+            - (SUM(dep_delay_new) * SUM(dep_delay_new)) / COUNT(*)
+                  )
+           ) as 'Pearsons r'
+from Flight_delays;
+```
+```{sql,,echo =FALSE, connection=con,output.var="d8"}
+select avg(arr_delay_new) from Flight_delays
+where day_of_month <= 23
+group by airline_id;
+```
+
+avg_delay  
+`-------------`  
+`r d1`  
+  
+max_delay  
+`-------------`  
+`r d2` 
+
+carrier
+origin_city_name
+dest_city_name
+fl_date
+arr_delay_new  
+`------`
+`----------------`
+`---------------`
+`-------`
+`------------`  
+`r d3`
+ 
+weekday_name
+abg_delay  
+`------------`
+`--------`  
+`r d4$weekday_name`  
+`r d4$avg_delay`  
+airline_name
+avg_delay  
+`-------------------  ---------------`  
+`r d5$airline_name`  
+`r d5$avg_delay`  
+  
+ 
+  
+Pearsons r  
+`-------------`  
+`r d7`  
+  
+
+
+
