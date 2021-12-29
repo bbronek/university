@@ -1,0 +1,35 @@
+header, nav, main, footer {
+  display: block;
+  width: 1078px;
+}
+body {
+  color: #ffffff;
+  background-color:#000000;
+
+}
+
+header {
+  color: #ffffff;
+  background-color:#76f0ea;
+  height: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+nav {
+  color: #ffffff;
+  background-color:#ff5858;
+  height: 100px;
+}
+
+main {
+  color: #ffffff;
+  background-color:#bdffb7;
+  height: 650px;
+}
+
+footer {
+  color: #ffffff;
+  background-color:#f0e876;
+  height: 35px;
+}
