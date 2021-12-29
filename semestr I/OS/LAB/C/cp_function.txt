@@ -1,0 +1,13 @@
+void cp(char *from, char *to)
+{
+    char buffer[1024];
+    int fd_in, fd_out, num;
+    fd_in  = open(from, O_RDONLY);
+    fd_out = open(to,O_RDWR | O_CREAT | O_TRUNC, 0666);
+    while ((num = read(fd_in, &buffer, 1024)) > 0)
+    {
+        write(fd_out, &buffer, num);
+    }
+    close(fd_in);
+    close(fd_out);
+}
