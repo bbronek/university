@@ -43,33 +43,37 @@ class Graph:
     def remove_edge(self, f, t):
         if f in self.vertices and t in self.vertices:
           self.vertices[f].remove_neighbour(t)
-          self.vertices[t].remove_neighbour(f)
     
     def connection_existance(self, f, t):
-        if f in self.vertices and t in self.vertices:
+        if f in self.vertices:
             return self.vertices[f].connection_existance(t)
+        else:
+          print("NIE")
 
     def number_of_connections(self, f):
-        return self.vertices[f].number_of_connections()
+        if f in self.vertices:
+          return self.vertices[f].number_of_connections()
+        else:
+          print(0)
 
 if __name__ == '__main__':
     G = Graph()
     n, m =  map(int, input().split())
 
     for x in range(m):
-      stdin = input().split()
-      c  = int(stdin[0])
-      v1 = int(stdin[1])
-      if len(stdin) == 3:
-        v2 = int(stdin[2])
+        stdin = input().split()
+        c  = int(stdin[0])
+        v1 = int(stdin[1])
+        if len(stdin) == 3:
+          v2 = int(stdin[2])
 
-      if c == 1:
-          G.add_edge(v1, v2)
-      elif c == 2:
-          G.remove_edge(v1, v2)
-      elif c == 3:
-          G.connection_existance(v1, v2)
-      elif c == 4:
-          G.number_of_connections(v1)
+        if c == 1:
+            G.add_edge(v1, v2)
+        elif c == 2:
+            G.remove_edge(v1, v2)
+        elif c == 3:
+            G.connection_existance(v1, v2)
+        elif c == 4:
+            G.number_of_connections(v1)
 
 
