@@ -11,9 +11,8 @@ def main():
         if (c[0] == 1):
             x = c[1]
             y = c[2]
-            if (not y in v[x]):
-                v[x].append(y)
-                v[y].append(x)
+            v[x].append(y)
+            v[y].append(x)
         elif (c[0] == 4):
             x = c[1]
             print(len(v[x]))
