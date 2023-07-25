@@ -1,0 +1,8 @@
+rok = c(1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002)
+przypadki = c(39.7, 38.2, 34.7, 33.1, 30.1, 28.4, 26.3, 24.7)
+data_set = data.frame(rok = rok, przypadki = przypadki)
+head(data_set)
+plot(data_set, main = "Wykres ", pch = 16)
+model = lm(przypadki ~ rok, data = data_set)
+plot(data_set, main = "Wykres", pch = 16)
+abline(model, col = "red", lwd = 2)
