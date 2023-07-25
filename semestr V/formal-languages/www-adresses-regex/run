@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+grep -E '((https?:\/\/(?:www\.|(?!www))))?[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}(:[0-9]{,palindroms-regex})?' -c
