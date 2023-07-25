@@ -1,0 +1,5 @@
+x Fiat Punto y
+x x Opel y y
+x x x Corsa y y y
+x x x x xOpel Astra y y y y
+x x x x x x Opel Ascona. y y y

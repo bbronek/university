@@ -1,0 +1,7 @@
+#!/bin/bash
+
+brand="(Audi|Bentley|Ford|Cadillac|Citroën|Dacia|Aston Martin|Alfa Romeo|Fiat|Honda|Hyundai|Infiniti|Jaguar|Jeep|Kia|Lada|Lamborghini|Lancia|Land Rover|Lexus|Maserati|Maybach|Mazda|Mercedes-Benz|Mini|Mitsubishi|Nissan|Opel|Peugeot|Porsche|Renault|Saab|Seat|Ssangyong|Subaru|Suzuki|Skoda|Tata|Toyota|Volkswagen|Volvo|Waz Lada)"
+
+match="\b${brand}([^A-Za-z][A-Z][a-z0-9]*)*\b"
+
+grep -E -o "$match"
