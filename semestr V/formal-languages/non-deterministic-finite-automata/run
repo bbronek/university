@@ -1,0 +1,60 @@
+#!/usr/bin/python3
+
+import sys
+
+
+def parse_automat_file(automat_file):
+    parsed = {}
+    with open(automat_file) as automat:
+        for line in automat:
+            pl = line.split()
+            if pl[0] in parsed:
+                parsed[pl[0]].append((pl[1:]))
+            else:
+                parsed[pl[0]] = [pl[1:]]
+    return parsed
+
+
+def parse_accepted_states(transitions):
+    parsed = []
+    for key in transitions:
+        if [] in transitions[key]:
+            parsed.append(key)
+    return parsed
+
+
+def change_state(sign, current_state, transitions):
+    current_state_updated = False
+    for t in transitions[current_state]:
+        if len(t) == 2 and t[1] == sign:
+            current_state_updated = t[0]
+    return current_state_updated
+
+
+def main(automat_path):
+    input_lines_arr = []
+    for line in sys.stdin:
+        input_lines_arr.append(line)
+    transitions = parse_automat_file(automat_path)
+    accepted_states = parse_accepted_states(transitions)
+    curr_state = '0'
+    for line in input_lines_arr:
+        for c in line:
+            if not curr_state:
+                sys.stdout.write('nie\n')
+                curr_state = '0'
+                break
+            if curr_state in accepted_states and c == '\n':
+                sys.stdout.write('tak\n')
+                curr_state = '0'
+                break
+            elif c == '\n':
+                sys.stdout.write('nie\n')
+                curr_state = '0'
+                break
+            else:
+                curr_state = change_state(c, curr_state, transitions)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1])
