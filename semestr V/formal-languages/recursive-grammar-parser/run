@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+class Parser
+  def initialize(grammar_file)
+    @rules = {}
+    @start_symbol = nil
+    File.foreach(grammar_file) do |line|
+      left, right = line.strip.split(" -> ")
+      @rules[left] ||= []
+      @rules[left] << right.split(" ")
+      @start_symbol ||= left
+    end
+  end
+
+  def parse(input)
+    input = input.gsub(/\s+/, "")
+    stack = [@start_symbol]
+    input_index = 0
+    while !stack.empty?
+      top = stack.pop
+      if top =~ /[A-Z]/
+        return false if @rules[top].nil?
+        @rules[top].each do |rule|
+          rule.reverse.each { |symbol| stack << symbol }
+        end
+      else
+        return false if input[input_index] != top
+        input_index += 1
+      end
+    end
+    input_index == input.size
+  end
+end
+
+# test
+grammar_file = 'gramatyka.txt'
+parser = Parser.new(grammar_file)
+input_string = gets.chomp
+puts parser.parse(input_string) ? "tak" : "nie"
