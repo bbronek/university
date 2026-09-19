@@ -1,115 +1,117 @@
+:- dynamic known/3.
+
 main :- identify.
 
 identify:-
   retractall(known(_,_,_)), % clear stored information
-  race(X),
+  breed(X), !,
   write('The perfect dog for you: '),write(X),nl.
 identify:-
   write('We don\'t have such a dog in our database.'),nl.
 
-race(french_buldog):- 
+breed(french_bulldog):- 
   size(small), 
   temperament(calm),
   hair_length(short),
   origin(france),
   fur_type(fur),
-  destiny(family).
+  purpose(family).
 
-race(dachshund):- 
+breed(dachshund):- 
   size(small), 
   temperament(calm),
   hair_length(short),
   origin(germany),
   fur_type(fur),
-  destiny(hunting).
+  purpose(hunting).
 
-race(beagle):- 
+breed(beagle):- 
   size(medium), 
   temperament(energetic),
   hair_length(short),
   origin(great_britain),
   fur_type(fur),
-  destiny(hunting).
+  purpose(hunting).
 
-race(alaskan_malamute):- 
+breed(alaskan_malamute):- 
   size(big), 
   temperament(calm),
   hair_length(long),
   origin(usa),
   fur_type(fur),
-  destiny(train).
+  purpose(sled).
 
 
-race(golden_retriever):-
+breed(golden_retriever):-
   size(medium), 
   temperament(calm),
   hair_length(long),
   origin(scotland),
   fur_type(fur),
-  destiny(family).
+  purpose(family).
 
-race(american_pitbulterier):- 
+breed(american_pit_bull_terrier):- 
   size(medium), 
-  temperament(aggresive),
+  temperament(aggressive),
   hair_length(short),
   origin(great_britain),
   fur_type(fur),
-  destiny(defensive).
+  purpose(defensive).
 
-race(border_collie):- 
+breed(border_collie):- 
   size(medium), 
-  temperament(energic),
+  temperament(energetic),
   hair_length(short),
   origin(scotland),
   fur_type(fur),
-  destiny(shepherd).
+  purpose(shepherd).
 
-race(maltese):- 
+breed(maltese):- 
   size(small), 
   temperament(calm),
   hair_length(long),
   origin(italy),
   fur_type(hair),
-  destiny(family).
+  purpose(family).
 
-race(doberman):-
+breed(doberman):-
   size(big),
-  temperament(aggresive),
+  temperament(aggressive),
   hair_length(short),
   origin(germany),
   fur_type(fur),
-  destiny(defensive).
+  purpose(defensive).
 
-race(german_shepherd):-
+breed(german_shepherd):-
   size(big),
-  temperament(energic),
+  temperament(energetic),
   hair_length(short),
   origin(germany),
   fur_type(fur),
-  destiny(defensive).
+  purpose(defensive).
 
-race(yorkshire_terrier):-
+breed(yorkshire_terrier):-
   size(small),
-  temperament(energic),
+  temperament(energetic),
   hair_length(long),
   origin(great_britain),
   fur_type(hair),
-  destiny(family).
+  purpose(family).
 
-race(labrador_retriever):-
+breed(labrador_retriever):-
   size(big),
-  temperament(energic),
+  temperament(energetic),
   hair_length(long),
-  origin(new_foundland),
+  origin(newfoundland),
   fur_type(fur),
-  destiny(family).
+  purpose(family).
 
 size(X):- menuask(size, X, [big, small, medium]).
-temperament(X):- menuask(temperament, X, [calm, aggresive, energic]).
-hair_length(X):- menuask(hair_length, X, [long, short, short]).
-origin(X):- menuask(origin, X, [france, germany, great_britain, usa, scotland, italy, new_foundland]).
+temperament(X):- menuask(temperament, X, [calm, aggressive, energetic]).
+hair_length(X):- menuask(hair_length, X, [long, short]).
+origin(X):- menuask(origin, X, [france, germany, great_britain, usa, scotland, italy, newfoundland]).
 fur_type(X):- menuask(fur_type, X, [fur, hair]).
-type(X):- menuask(type, X, [family, hunting, maratonczyk, shepherd, train, defensive]).
+purpose(X):- menuask(purpose, X, [family, hunting, runner, shepherd, sled, defensive]).
 
 menuask(Attribute,Value,_):-
   known(yes,Attribute,Value),       
@@ -142,7 +144,7 @@ pick_menu(N,Val,Menu):-
   pick_menu(Val,Val,_).             
                                     
 
-pick_menu(_,_,inny,[]). 
+pick_menu(_,_,other,[]). 
 pick_menu(N,N, Item, [Item|_]).      
 pick_menu(Ctr,N, Val, [_|Rest]):-
   NextCtr is Ctr + 1,               

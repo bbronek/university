@@ -1,23 +1,16 @@
-import sympy as sym
-import numpy as np
+def tangent_method(x, tolerance=0.01, max_iterations=100):
+    if tolerance <= 0:
+        raise ValueError("Tolerance must be positive")
+    for _ in range(max_iterations):
+        value = x**3 - 3 * x + 2
+        if abs(value) < tolerance:
+            return x
+        derivative = 3 * x**2 - 3
+        if derivative == 0:
+            raise ValueError("Derivative is zero")
+        x -= value / derivative
+    raise RuntimeError("Newton's method did not converge")
 
 
-def tangent_method(x):
-    func = np.poly1d([1,0,-3,2])
-    derivFunc = func.deriv()
-
-    h =  func(x)/derivFunc(x)
-    eps = 0.01
-    i = 0
-    temp_x = 0
-    while abs(func(x)) >= eps or abs(x-temp_x) >= eps:
-        h = func(x)/derivFunc(x)
-        temp_x=x
-        x = x - h
-        i = i+1
-     
-    print("The value of the root is : ", "%.4f"% x)
-    print("Iterations= "+ str(i))
-
-x0 = 2 # Initial value
-tangent_method(x0)
+if __name__ == "__main__":
+    print(f"Root: {tangent_method(2):.4f}")

@@ -1,4 +1,4 @@
--- zad 1
+-- task 1
 -- (\x -> x >= 0) 3 a1
 -- 3 -> True
 -- (\x -> x^x) 3 a2
@@ -12,29 +12,29 @@
 -- (\a b c -> not a && (b || c)  ) True False True
 -- input: True False True | Output: False
 
--- zad 2
+-- task 2
 data Moto = Audi | BMW | Skoda | Fiat | Toyota
                 deriving(Show, Eq)
 
-madeIN::Kraj->Moto
+madeIN::Country->Moto
 
-type Kraj = [Char]
+type Country = [Char]
 
-madeIN kraj
-    | kraj == "Niemcy" = Audi
-    | kraj == "Czechy" = Skoda
-    | kraj == "Włochy" = Fiat
-    | otherwise = error "Ten kraj nie jest dostepny"
+madeIN country
+    | country == "Germany" = Audi
+    | country == "Czech Republic" = Skoda
+    | country == "Italy" = Fiat
+    | otherwise = error "Country not available"
 
 velocityOfCar c = case c of
                     Audi   -> 270
                     BMW    -> 320
                     Skoda  -> 250
                     Toyota -> 260
-                    _      -> error "Niepoprawna marka"
+                    _      -> error "Invalid car brand"
 
--- zad 3
-data Uczelnia = UW | UJ | Uwr | UAM | UG
+-- task 3
+data University = UW | UJ | Uwr | UAM | UG
                     deriving(Show, Eq)
 
 collegeData c = case c of
@@ -42,9 +42,9 @@ collegeData c = case c of
                     UJ  -> (-23, "Krakow")
                     UAM -> (2345, "Poznan")
                     UG  -> (-5345435, "Gdańsk")
-                    _   -> error "Ta uczelnia nie jest dostepna do sprawdzenia"
+                    _   -> error "University not available"
 
--- zad 4
+-- task 4
 data Tree a = Empty | Node a (Tree a) (Tree a)
                 deriving (Show, Eq)
 
@@ -79,7 +79,7 @@ postorder::Tree a -> [a]
 postorder Empty = []
 postorder(Node a l r) = postorder l ++ postorder r ++ [a]
 
--- zad 5
+-- task 5
 -- a)
 treeMember1 :: Eq a => a -> Tree a -> Bool
 treeMember1 _ Empty = False
@@ -92,18 +92,18 @@ treeMember2 x (Node a l r)
     | x == a    = True
     | otherwise = treeMember2 x l || treeMember2 x r
 
--- zad 6
+-- task 6
 subtree :: Eq a => Tree a -> Tree a -> Bool
 subtree t1 t2 | t1 == t2 = True
 subtree t1 (Node _ c1 c2) = subtree t1 c1 || subtree t1 c2
 subtree _ _ = False
 
--- zad 7
+-- task 7
 zipWith' f xs [] = xs
 zipWith' f [] xs = xs
 zipWith' f (x:xs) (y:ys) = f x y : zipWith' f xs ys
 
-poziomo :: Tree a -> [[a]]
-poziomo Empty = [[]]
-poziomo (Node a Empty Empty) = [[a]]
-poziomo (Node a l r) = [a] : zipWith' (++) (poziomo l) (poziomo r)
+levels :: Tree a -> [[a]]
+levels Empty = [[]]
+levels (Node a Empty Empty) = [[a]]
+levels (Node a l r) = [a] : zipWith' (++) (levels l) (levels r)

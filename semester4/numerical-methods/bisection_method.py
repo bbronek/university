@@ -1,30 +1,27 @@
 def f(x):
-    return x**2-2
+    return x**2 - 2
 
-def bisection(x0, x1, e):
-    step = 1
-    condition = True
 
-    while condition:
-        x2 = (x0 + x1) / 2
-        print('Iteration-%d, x2 = %0.6f and f(x2) = %0.6f' % (step, x2, f(x2)))
-
-        if f(x0) * f(x2) < 0:
-            x1 = x2
+def bisection(left, right, tolerance, max_iterations=1000):
+    if tolerance <= 0 or left > right or f(left) * f(right) > 0:
+        raise ValueError("Expected a bracketed root and a positive tolerance")
+    if f(left) == 0:
+        return left
+    if f(right) == 0:
+        return right
+    for _ in range(max_iterations):
+        middle = (left + right) / 2
+        if f(middle) == 0 or (abs(f(middle)) < tolerance and right - left < tolerance):
+            return middle
+        if f(left) * f(middle) < 0:
+            right = middle
         else:
-            x0 = x2
+            left = middle
+    raise RuntimeError("Bisection did not converge")
 
-        step = step + 1
-        condition =abs(f(x2)) >= e or abs(x1 - x0) >= e
 
-    print('\nRequired Root is : %0.8f' % x2)
-
-x0 = float(input('First Guess: '))
-x1 = float(input('Second Guess: '))
-e = float(input('Tolerable Error: '))
-
-if f(x0) * f(x1) > 0.0:
-    print('Given guess values do not bracket the root.')
-    print('Try Again with different guess values.')
-else:
-    bisection(x0, x1, e)
+if __name__ == "__main__":
+    left = float(input("Left endpoint: "))
+    right = float(input("Right endpoint: "))
+    tolerance = float(input("Tolerance: "))
+    print(f"Root: {bisection(left, right, tolerance):.8f}")

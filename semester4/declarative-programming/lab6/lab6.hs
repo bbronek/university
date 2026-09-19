@@ -1,13 +1,13 @@
-import Mojzbior
+import ListSet
 
--- zad 1
--- iloczyn [1,2,3] [2] 
+-- task 1
+-- intersection [1,2,3] [2] 
 -- out: [2]
 
 data Tree a = Empty | Node a (Tree a) (Tree a)
                 deriving (Show, Eq)
 
--- zad 2
+-- task 2
 t1::Tree Int
 t2::Tree Char
 
@@ -27,7 +27,7 @@ minHeight Empty = 1
 minHeight (Node a Empty Empty) = 0
 minHeight (Node a l r) = 1 + min (minHeight r) (minHeight l)
 
--- zad 3
+-- task 3
 data TernaryTree a = Empty1 | Node1 a (TernaryTree a) (TernaryTree a) (TernaryTree a)
                         deriving (Show)
 
@@ -41,19 +41,14 @@ sumTernaryTree::TernaryTree Int -> Int
 sumTernaryTree Empty1 = 0
 sumTernaryTree (Node1 a l m r) = a + sumTernaryTree l + sumTernaryTree m + sumTernaryTree r
 
--- zad 4
-class Nazwisko a where
+-- task 4
+class LastName a where
   fun1 :: a -> String
 
-data Imie = Bartek | Robert | Tomasz
+data FirstName = Bartek | Robert | Tomasz
             deriving(Show)
 
-instance Nazwisko Imie where
+instance LastName FirstName where
   fun1 Bartek = "Bronikowski"
   fun1 Robert = "Kowalski"
   fun1 Tomasz = "Nowak"
-
--- fun1 to funkcja ktora dla unikalnego imienia przyporzadkowuje nazwisko
--- przyklad:
--- in: fun1 Bartek
--- out "Bronikowski"

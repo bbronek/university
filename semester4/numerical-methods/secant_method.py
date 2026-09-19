@@ -1,31 +1,22 @@
-import math
-
-EPS0 = 0.01 # accuracy of the comparison with zero
-EPSX = 0.01 # accuracy of determining the root
-
 def f(x):
-   return x**3+x**2-3*x-3
-
-x1 = 1
-x2 = 2
-print ("Result:")
+    return x**3 + x**2 - 3 * x - 3
 
 
-f1 = f(x1)
-f2 = f(x2)
-i = 15 
+def secant(first, second, tolerance=0.01, max_iterations=100):
+    if tolerance <= 0:
+        raise ValueError("Tolerance must be positive")
+    for _ in range(max_iterations):
+        first_value, second_value = f(first), f(second)
+        if abs(second_value) < tolerance:
+            return second
+        if first_value == second_value:
+            raise ValueError("Secant points have equal function values")
+        next_point = second - second_value * (second - first) / (
+            second_value - first_value
+        )
+        first, second = second, next_point
+    raise RuntimeError("Secant method did not converge")
 
-while (i > 0) and (abs(x1 - x2) > EPSX):
-    if abs(f1 - f2) < EPS0:
-        print("Error: Wrong intial points")
-        i = 0
-        break
-    x0 = x1 - f1 * (x1 - x2) / (f1 - f2)
-    f0 = f(x0)
-    if abs(f0) < EPS0: break
-    x2, f2 = x1, f1
-    x1, f1 = x0, f0
-    i -= 1
-    if i == 0: print ("Error: Limit exceeded")
 
-if i > 0: print("x0 = %15.8f" % x0)
+if __name__ == "__main__":
+    print(f"Root: {secant(1, 2):.8f}")

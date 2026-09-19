@@ -1,28 +1,19 @@
 def f(x):
-    return x**4+1
-
-def simpson(x0, xn, n):
-    h = (xn - x0) / (2*n)
-    print(h)
-    integration = f(x0) + f(xn)
-
-    for i in range(1, 2*n):
-        k = x0 + i * h
-        print(k)
-        if i % 2 == 0:
-            integration = integration + 2 * f(k)
-        else:
-            integration = integration + 4 * f(k)
-
-    # Finding final integration value
-    integration = integration * h / 3
-
-    return integration
-
-lower_limit = float(input("Enter lower limit of integration: "))
-upper_limit = float(input("Enter upper limit of integration: "))
-sub_interval = int(input("Enter number of sub intervals: "))
+    return x**4 + 1
 
 
-result = simpson(lower_limit, upper_limit, sub_interval)
-print("Integration result by Simpson's method is: %0.6f" % (result))
+def simpson(lower, upper, pairs):
+    if pairs <= 0:
+        raise ValueError("The number of interval pairs must be positive")
+    step = (upper - lower) / (2 * pairs)
+    total = f(lower) + f(upper)
+    for index in range(1, 2 * pairs):
+        total += (4 if index % 2 else 2) * f(lower + index * step)
+    return total * step / 3
+
+
+if __name__ == "__main__":
+    lower = float(input("Lower integration limit: "))
+    upper = float(input("Upper integration limit: "))
+    pairs = int(input("Number of interval pairs: "))
+    print(f"Simpson integral: {simpson(lower, upper, pairs):.6f}")

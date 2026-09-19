@@ -6,7 +6,7 @@ a x | x > 2          = x^2
     | x<=0           = abs x
 
 -- volume of a cylinder
-b(r,h) = (1/3) * pi * r^2
+b(r,h) = pi * r^2 * h
 
 -- surface area of a cylinder
 c(r,h) = (2*pi*r^2) + (2*pi*r*h)
@@ -29,14 +29,12 @@ g n = if n <=2 then 1
         else g(n-2) + g(n-1)
 
 -- check if number x is n element of fibonacci seq
-h x = x == g x
+h x = x >= 0 && x `elem` takeWhile (<= x) fibonacci
+  where fibonacci = 0 : 1 : zipWith (+) fibonacci (tail fibonacci)
 
-gcd a b
-  | a == b = a
-  | a > b = gcd(a-b) b
-  | otherwise = gcd a (b-a)
+gcd a 0 = abs a
+gcd a b = gcd b (a `mod` b)
 
-lcm a b = if gcd a b == 0 then 0
-            else (a*b)/gcd a b
+lcm a b = if a == 0 || b == 0 then 0 else abs ((a `div` gcd a b) * b)
 
 canBuildTriangle a b c = (a+b) > c && (a+c) > b && (b+c) > a
