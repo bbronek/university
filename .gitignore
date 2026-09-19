@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.o
+*.class
+.gradle/
+build/
+bin/
+out/
+*.far
+microshell
+.env
