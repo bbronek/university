@@ -52,7 +52,7 @@ For numerical and machine-learning work, create an environment and install the s
 ```sh
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -r semester7/machine-learning/requirements.txt
+python -m pip install numpy pandas scikit-learn matplotlib
 python semester7/machine-learning/lab5/main.py
 ```
 
@@ -101,7 +101,7 @@ The PESEL exercise validates the eleven-digit format and checksum; it does not v
 
 | Area | Requirements and entry point |
 |---|---|
-| **Ruby ATM** | Run `ruby tests/check_atm.rb`. To run its RSpec suite, run `bundle install` and `bundle exec rspec specs` from `semester5/object-oriented-analysis-and-design/prototype/atm`. Amounts are positive integers in minor currency units. |
+| **Ruby ATM** | Run `bundle install` and `bundle exec rspec specs` from `semester5/object-oriented-analysis-and-design/prototype/atm`. Amounts are positive integers in minor currency units. |
 | **Automata and regex** | Run `./run automaton.1.txt < in.1.txt` from the automata directory. Regex runners require Bash and `grep`. |
 | **Recursive grammar** | Run `ruby semester5/formal-languages/recursive-grammar-parser/run`; one input expression per line. An optional argument selects a grammar file. |
 | **Haskell** | Load one lab at a time in GHCi. Lab 6 imports the adjacent `ListSet.hs`; lab 9 requires `parsec`. |
@@ -127,19 +127,13 @@ The [English results report](semester7/machine-learning/project/report.pdf) pres
 
 Included lab datasets cover fires/thefts, Titanic passengers, communities, apartment clustering, and avocado sales. The apartment dataset's column labels and floor categories are in English. Proper names and original cryptanalysis sample texts retain their original spelling.
 
-## Checks and formatting
-
-```sh
-MPLBACKEND=Agg python tools/check.py
-```
-
-The runner parses the Python sources, compiles available host C/C++ exercises with warnings treated as errors, checks Ruby/Bash syntax, and runs the regression scripts in [`tests`](tests/). Java, Ruby, and scientific-Python checks need their corresponding runtimes; missing optional dependencies are reported. Networking checks open a local server.
+## Validation and formatting
 
 The refactor was checked with GCC/G++, Java 17, Ruby, and the scientific Python dependencies. All three JUnit tests and all nine RSpec examples passed. Haskell files were parsed and formatted with Ormolu. The English reports were rendered and visually inspected.
 
 Full execution of R, Haskell, Prolog, Scilab, Thrax, Mbed, external database connections, and TensorFlow/PyTorch training requires additional environments and was not validated here. The standalone project classifiers were checked with synthetic data, not the missing house-prices dataset. The three-machine scheduling exercise uses a Johnson-style reduction whose optimality depends on the usual processing-time conditions; NEH and local search are heuristics.
 
-Formatting conventions are recorded in [`.editorconfig`](.editorconfig), [`.clang-format`](.clang-format), and [`pyproject.toml`](pyproject.toml): UTF-8, LF line endings, consistent indentation, and Black-formatted Python. Generated build outputs, caches, and local environments are ignored. Previously generated files may remain locally, but are no longer tracked.
+Formatting conventions are recorded in [`.editorconfig`](.editorconfig) and [`.clang-format`](.clang-format): UTF-8, LF line endings, consistent indentation, and Black-formatted Python (88 columns). Generated build outputs, caches, and local environments are ignored. Previously generated files may remain locally, but are no longer tracked.
 
 ## Reports and reference material
 
@@ -148,11 +142,5 @@ Formatting conventions are recorded in [`.editorconfig`](.editorconfig), [`.clan
 - [Cryptanalysis reference PDFs](semester6/elements-of-cryptanalysis/): fitness plots, Playfair experiments, S-box analysis, and an SPN design.
 
 The cryptanalysis PDFs were reviewed as historical coursework. Their explanatory text is already English; Polish, German, and Lithuanian passages are experimental plaintext. They are not validated implementations: the SPN S-box repeats output `1001` and omits `0000`; the S-box analysis contains an incomplete difference table; and the embedded Playfair listing contains n-gram boundary errors and an unbounded retry loop. Their original experimental records have been preserved.
-
-To rebuild the two English reports, install `reportlab` and run:
-
-```sh
-python tools/build_reports.py
-```
 
 The small-key cryptography examples demonstrate algorithms and are not suitable for protecting real data. Teaching examples retain their course context, including the Java material attributed to Bruce Eckel and the network-game lineage from Deitel and Deitel.
