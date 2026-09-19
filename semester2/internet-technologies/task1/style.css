@@ -1,33 +1,37 @@
 header, nav, main, footer {
   display: block;
-  width: 1078px;
+  width: 100%;
 }
 body {
-  color: #ffffff;
+  color: #172121;
   background-color:#000000;
 
 }
 
 header {
-  color: #ffffff;
+  color: #172121;
   background-color:#76f0ea;
   height: 20px;
 }
 
 nav {
-  color: #ffffff;
+  color: #172121;
   background-color:#ff5858;
   height: 100px;
 }
 
 main {
-  color: #ffffff;
+  color: #172121;
   background-color:#bdffb7;
   height: 650px;
 }
 
 footer {
-  color: #ffffff;
+  color: #172121;
   background-color:#f0e876;
   height: 35px;
+}
+#container {
+  max-width: 1078px;
+  margin: 0 auto;
 }

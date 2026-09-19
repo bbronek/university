@@ -1,58 +1,29 @@
-import jdk.jfr.Description;
-import org.junit.Ignore;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AppTest {
-
-
-    @Test()
-    public void shouldReturnPeselLengthExcpetion()  {
-         Exception exception = assertThrows(PeselException.class, () -> {
-             App.checkPesel("345");
-         });
-
-        String expectedMessage = "CustomException: Nie poprawna dlugosc peselu";
-        String actualMessage = exception.toString();
-
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Ignore("Remove to run tests")
+class AppTest {
     @Test
-    public void shouldReturnCOntrolDigitExcpetion()  {
-         Exception exception = assertThrows(PeselException.class, () -> {
-             App.checkPesel("12345678912");
-         });
-
-        String expectedMessage = "CustomException: Nie poprawna cyfra kontrolna";
-        String actualMessage = exception.toString();
-
-        assertEquals(expectedMessage, actualMessage);
+    void validatesPeselFormatAndChecksum() {
+        assertThrows(PeselException.class, () -> App.checkPesel("345"));
+        assertThrows(PeselException.class, () -> App.checkPesel("abcdefghijk"));
+        assertThrows(PeselException.class, () -> App.checkPesel("02070803629"));
+        assertDoesNotThrow(() -> App.checkPesel("02070803628"));
+        assertDoesNotThrow(() -> App.checkPesel("00000000000"));
     }
 
     @Test
-    @Description("Function should return false when in list exists person with same pesel")
-    public void modifyDataTest() {
-        boolean expected = false;
-        Inhabitant inh = new Inhabitant();
-
-        inh.setMiasto("Warszawa");
-        inh.setImie("Jan");
-        inh.setNazwisko("kowalski");
-        inh.setPesel("63120792893");
-
-        List<Inhabitant> listInhabitants = new ArrayList<>();
-        listInhabitants.add(inh);
-        inh.setImie("Tomasz");
-        listInhabitants.add(inh);
-
-        assertEquals(expected, App.modifyData(inh, listInhabitants));
+    void updatesExistingInhabitant() {
+        Inhabitant original = new Inhabitant();
+        original.setPesel("02070803628");
+        List<Inhabitant> inhabitants = new ArrayList<>();
+        inhabitants.add(original);
+        Inhabitant replacement = new Inhabitant();
+        replacement.setPesel(original.getPesel());
+        replacement.setFirstName("John");
+        assertFalse(App.modifyData(replacement, inhabitants));
+        assertEquals("John", original.getFirstName());
+        assertEquals(1, inhabitants.size());
     }
-
-
 }

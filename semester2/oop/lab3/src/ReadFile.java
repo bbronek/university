@@ -1,27 +1,15 @@
-import java.io.File;
-//import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ReadFile {
     public static void main(String[] args) throws IOException {
-        File file = new File("/home/bbronek/Desktop/Lab III/src/helloo");
-        Scanner scan = new Scanner(file);
-
-        String fileContent = "";
-        while(scan.hasNextLine()){
-            fileContent = fileContent.concat(scan.nextLine() + '\n');
+        if (args.length != 2) {
+            System.err.println("Usage: java ReadFile <source> <destination>");
+            return;
         }
-        scan.close();
-
-        System.out.println(fileContent);
-
-        FileWriter writer = new FileWriter("/home/bbronek/Desktop/Lab III/src/output");
-
-        writer.write(fileContent);
-        writer.close();
-
-
+        String content = Files.readString(Path.of(args[0]));
+        System.out.print(content);
+        Files.writeString(Path.of(args[1]), content);
     }
 }

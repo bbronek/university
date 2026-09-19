@@ -1,44 +1,38 @@
-from functools import reduce
-matrix = []
-def third_step(f,v,j):
-    for x in range(len(v)):
-        for y in range(len(v[0])):
-            v[x][y] -= f[y] * v[x][j]
+def rref(matrix, tolerance=1e-12):
+    if tolerance <= 0:
+        raise ValueError("Tolerance must be positive")
+    if not matrix:
+        return []
+    width = len(matrix[0])
+    if any(len(row) != width for row in matrix):
+        raise ValueError("Matrix rows must have equal lengths")
+    result = [list(map(float, row)) for row in matrix]
+    pivot_row = 0
+    for column in range(width):
+        pivot = max(
+            range(pivot_row, len(result)), key=lambda row: abs(result[row][column])
+        )
+        if abs(result[pivot][column]) <= tolerance:
+            continue
+        result[pivot_row], result[pivot] = result[pivot], result[pivot_row]
+        divisor = result[pivot_row][column]
+        result[pivot_row] = [value / divisor for value in result[pivot_row]]
+        for row in range(len(result)):
+            if row != pivot_row:
+                factor = result[row][column]
+                result[row] = [
+                    value - factor * pivot_value
+                    for value, pivot_value in zip(result[row], result[pivot_row])
+                ]
+        pivot_row += 1
+        if pivot_row == len(result):
+            break
+    return result
 
 
-def rref(matrix):
-    R = matrix
-    i,j = 0,0
-
-    while True:
-        if (i == len(R) - 1) : break
-        while(R[i][j] != 0):
-            R[0],R[i] = R[i],R[0]
-            R[0] = list(map(lambda x:x/R[i][j],R[i]))
-            third_step(R[0],R[1:],j)
-            if (i == len(R) - 1): break
-            if((j == len(R[0]) - 1)):
-                i += 1
-                j = 0
-            else:
-                j += 1
-        if(R[i][j] != 0):
-            j+=1
-    return R
-
-
-if __name__ == '__main__':
-    line = input()
-    line = line.strip().split()
-    line = [int(i) for i in line]
-    m,n = line[0],line[1]
-    for i in range(m):
-        line2 = input()
-        line2 = line2.strip().split()
-        line2 = [int(i) for i in line2]
-        matrix.append(line2)
-
+if __name__ == "__main__":
+    rows, columns = map(int, input().split())
+    matrix = [list(map(float, input().split())) for _ in range(rows)]
+    if any(len(row) != columns for row in matrix):
+        raise ValueError("Unexpected number of columns")
     print(rref(matrix))
-
-
-

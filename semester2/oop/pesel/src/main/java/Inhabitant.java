@@ -1,27 +1,27 @@
 public class Inhabitant {
-    String miasto, imie, nazwisko, pesel;
+    private String city, firstName, lastName, pesel;
 
-    public void setMiasto(String miasto) {
-        this.miasto = miasto;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setPesel(String pesel) {
         this.pesel = pesel;
     }
 
-    public String getMiasto() { return miasto; }
+    public String getCity() { return city; }
 
-    public String getImie() { return imie; }
+    public String getFirstName() { return firstName; }
 
-    public String getNazwisko() { return nazwisko; }
+    public String getLastName() { return lastName; }
 
     public String getPesel() { return pesel; }
 }

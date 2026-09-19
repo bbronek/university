@@ -1,56 +1,41 @@
-import java.util.*;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class MainStudent {
-
-    public static void main(String[] args) throws IOException
-    {
-        String dz;
-        List<Student> listStudent = new ArrayList<>();
-
-        Scanner scanner = new Scanner(System.in);
-
-        String runAgain;
-        do {
-            StudentDzienny std = new StudentDzienny();
-            StudentZaoczny stz = new StudentZaoczny();
-            System.out.println("Proszę podaj swój numer indeksu:");
-            dz = scanner.nextLine();
-            if (dz.substring(0, 1).equals("d"))
-                std.setIndex(dz);
-            else
-                stz.setIndex(dz);
-
-            System.out.println("Proszę podaj swoje imię");
-            if (dz.substring(0, 1).equals("d"))
-                std.setName(scanner.nextLine());
-            else
-                stz.setName(scanner.nextLine());
-
-            System.out.println("Proszę podaj swoje nazwisko:");
-            if (dz.substring(0, 1).equals("d"))
-                std.setSurname(scanner.nextLine());
-            else
-                stz.setSurname(scanner.nextLine());
-
-            if (dz.substring(0, 1).equals("d"))
-                listStudent.add(std);
-            else
-                listStudent.add(stz);
-
-            System.out.println("Chcesz wykonać kolejne działanie? Wpisz literę t lub n.");
-            runAgain = scanner.nextLine();
-
-        } while (runAgain.equals("t"));
-
-        scanner.close();
-
-        FileWriter writer = new FileWriter("studenci.txt");
-        for(Student st : listStudent) {
-            writer.write(st.name + " " + st.surname + " " + st.index + "\n");
+    public static void main(String[] args) throws IOException {
+        List<Student> students = new ArrayList<>();
+        try (Scanner scanner = new Scanner(System.in)) {
+            do {
+                System.out.println("Enter your student ID (f for full-time, p for part-time):");
+                if (!scanner.hasNextLine()) break;
+                String index = scanner.nextLine().trim();
+                if (!index.startsWith("f") && !index.startsWith("p")) {
+                    System.out.println("Student ID must begin with f or p");
+                    continue;
+                }
+                Student student = index.startsWith("f")
+                        ? new FullTimeStudent(index) : new PartTimeStudent(index);
+                System.out.println("Enter your first name:");
+                if (!scanner.hasNextLine()) break;
+                student.setName(scanner.nextLine());
+                System.out.println("Enter your last name:");
+                if (!scanner.hasNextLine()) break;
+                student.setSurname(scanner.nextLine());
+                students.add(student);
+                System.out.println("Add another student? Enter y or n:");
+                if (!scanner.hasNextLine() || !scanner.nextLine().equalsIgnoreCase("y")) break;
+            } while (true);
         }
-        writer.close();
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(args.length > 0 ? args[0] : "students.txt"))) {
+            for (Student student : students) {
+                writer.write(String.join(" ", student.getName(), student.getSurname(), student.getIndex()));
+                writer.newLine();
+            }
+        }
     }
-
 }

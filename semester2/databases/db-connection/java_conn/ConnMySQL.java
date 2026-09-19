@@ -1,45 +1,24 @@
-import java.sql.*;
-import io.github.cdimascio.dotenv.Dotenv;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-Dotenv dotenv = Dotenv.load();
-
-public class ConnMySQL
-{
-
-    public static void main(String[] args) throws ClassNotFoundException {
-        Connection conn = null;
-        String dbName = dotenv.get("DBNAME") ;
-        String dbUserName = dotenv.get("USERNAME");
-        String dbPassword = dotenv.get("PASSWORD");
-        String connectionString = dotenv.get("URL") + dbName + "?user=" + dbUserName + "&password=" + dbPassword + "&useUnicode=true&characterEncoding=UTF-8";
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        try {
-
-           conn = DriverManager.getConnection(connectionString);
-           Statement stat = conn.createStatement();
-           ResultSet rs = stat.executeQuery(dotenv.get("QUERY"));
-
-           while(rs.next()){
-               System.out.println(rs.getString(dotenv.get("COLUMN1")) + " " + rs.getString(dotenv.get("COLUMN2")));
-           }
-
-
+public class ConnMySQL {
+    private static String environment(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Missing environment variable: " + name);
         }
-        catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        finally {
-            if(conn != null)
-            {
-                try
-                {
-                    conn.close();
-                }
-                catch(Exception e) {
-                    System.out.println(e.getMessage());
-                }
+        return value;
+    }
+
+    public static void main(String[] args) throws Exception {
+        String url = environment("URL") + environment("DBNAME");
+        try (Connection connection = DriverManager.getConnection(url, environment("DBUSER"), environment("PASSWORD"));
+             Statement statement = connection.createStatement();
+             ResultSet rows = statement.executeQuery(environment("QUERY"))) {
+            while (rows.next()) {
+                System.out.println(rows.getString(environment("COLUMN1")) + " " + rows.getString(environment("COLUMN2")));
             }
         }
     }

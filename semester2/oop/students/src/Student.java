@@ -1,7 +1,7 @@
 public abstract class Student {
-    String name;
-    String surname;
-    String index;
+    private String name;
+    private String surname;
+    private String index;
 
     public Student() {
     }
@@ -14,7 +14,7 @@ public abstract class Student {
         return index;
     }
 
-    public  void setIndex(String Index){
+    public  void setIndex(String index){
         this.index = index;
     }
 

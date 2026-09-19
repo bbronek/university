@@ -1,67 +1,40 @@
-from functools import reduce
-def gcf(a,b):
-    fa = a
-    fb = b
-    while b:
-        a,b = b,a%b
-    return (fa*fb)/a
+from math import lcm
 
-def transposition(x):
-    for i in range(1,len(x)):
-        print("(%d,%d)"%(x[0],x[len(x)-i]),end='')
 
-def cykle(p):
-    p = {i+1: p[i] for i in range(len(p))}
-    cycles = []
-    while p:
-        e = next(iter(p))
-        curr = p[e]
-        nextt = p[curr]
+def cycles(permutation):
+    if sorted(permutation) != list(range(1, len(permutation) + 1)):
+        raise ValueError("Expected a permutation of 1 through n")
+    visited = set()
+    result = []
+    for start in range(1, len(permutation) + 1):
+        if start in visited:
+            continue
         cycle = []
-        while True:
-            if curr != nextt:
-                cycle.append(curr)
-            del p[curr]
-            curr = nextt
-            if nextt in p:
-                nextt = p[nextt]
-            else:
-                break
-        rc = []
-        if len(cycle) != 0 :
-            rc.append(cycle[len(cycle)-1])
-            rc.append(cycle[0])
-            for i in range(1,len(cycle)-1):
-                rc.append(cycle[i])
-        cycles.append(rc)
-    return cycles
-n = int(input())
-v = input().strip().split()
-v = [int(i) for i in v]
+        current = start
+        while current not in visited:
+            visited.add(current)
+            cycle.append(current)
+            current = permutation[current - 1]
+        if len(cycle) > 1:
+            result.append(cycle)
+    return result
 
 
-r = cykle(v)
-g = []
-s = 0
-for i,x in enumerate(r):
-    if len(x) == 0:
-        del r[i]
-    else:
-        g.append(len(x))
-        s += len(x)-1
-rz = reduce(gcf,g)  # order of permutation
+def main():
+    count = int(input())
+    permutation = list(map(int, input().split()))
+    if len(permutation) != count:
+        raise ValueError("Unexpected permutation length")
+    result = cycles(permutation)
+    print("".join("(" + ",".join(map(str, cycle)) + ")" for cycle in result) or "()")
+    print(lcm(*(len(cycle) for cycle in result)))
+    print(
+        "".join(
+            f"({cycle[0]},{value})" for cycle in result for value in reversed(cycle[1:])
+        )
+    )
+    print("odd" if sum(len(cycle) - 1 for cycle in result) % 2 else "even")
 
-for i in range(len(r)):
-    print('(',end='')
-    print('{},'.format(r[i][0]),end='')
-    for j in range(1,len(r[i])-1):
-        print("{},".format(r[i][j]),end='')
-    print("%d)"%(r[i][len(r[i])-1]),end='')
-print('\n%d'%rz)
 
-for x in r:
-    transposition(x)
-if(s%2):
-    print('\nnieparzysta')
-else:
-    print('\nparzysta')
+if __name__ == "__main__":
+    main()
