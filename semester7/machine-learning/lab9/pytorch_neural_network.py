@@ -1,78 +1,56 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
+from data import load_data
 from sklearn.metrics import accuracy_score
+import torch
+from torch import nn
+from torch.utils.data import DataLoader, TensorDataset
 
-data = pd.read_csv('avocado_data.csv')
-
-features = data.drop(['Date', 'type', 'region', 'AveragePrice'], axis=1)
-labels = data['type']
-
-data = data.dropna()
-
-label_encoder = LabelEncoder()
-y_encoded = label_encoder.fit_transform(labels)
-y_tensor = torch.tensor(y_encoded, dtype=torch.long)
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(features)
-X_tensor = torch.tensor(X_scaled, dtype=torch.float32)
-
-X_train, X_test, y_train, y_test = train_test_split(X_tensor, y_tensor, test_size=0.2, random_state=42)
-
-train_dataset = TensorDataset(X_train, y_train)
-train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
 class AvocadoClassifier(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
-        super(AvocadoClassifier, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, output_size)
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(input_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, output_size),
+        )
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        return x
+    def forward(self, values):
+        return self.layers(values)
 
-input_size = X_tensor.shape[1]
-hidden_size = 64
-output_size = len(label_encoder.classes_)
-epochs = 10
-lr = 0.00001
-log_interval = 10
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = AvocadoClassifier(input_size, hidden_size, output_size).to(device)
-optimizer = optim.SGD(model.parameters(), lr=lr)
-criterion = nn.CrossEntropyLoss()
+def main():
+    torch.manual_seed(42)
+    train, test, train_labels, test_labels, classes = load_data()
+    dataset = TensorDataset(
+        torch.tensor(train, dtype=torch.float32),
+        torch.tensor(train_labels, dtype=torch.long),
+    )
+    batches = DataLoader(dataset, batch_size=64, shuffle=True)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = AvocadoClassifier(train.shape[1], 64, len(classes)).to(device)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.00001)
+    criterion = nn.CrossEntropyLoss()
+    for epoch in range(1, 11):
+        model.train()
+        total_loss = 0.0
+        for values, labels in batches:
+            values, labels = values.to(device), labels.to(device)
+            optimizer.zero_grad()
+            loss = criterion(model(values), labels)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item() * len(values)
+        print(f"Epoch {epoch}: loss {total_loss / len(dataset):.6f}")
+    model.eval()
+    with torch.no_grad():
+        predicted = (
+            model(torch.tensor(test, dtype=torch.float32, device=device))
+            .argmax(dim=1)
+            .cpu()
+            .numpy()
+        )
+    print(f"Accuracy: {accuracy_score(test_labels, predicted):.4f}")
 
-def train(model, device, train_loader, optimizer, criterion, epoch):
-    model.train()
-    for batch_idx, (data, target) in enumerate(train_loader):
-        data, target = data.to(device), target.to(device)
-        optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, target)
-        loss.backward()
-        optimizer.step()
 
-        if batch_idx % log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.item()))
-
-for epoch in range(1, epochs + 1):
-    train(model, device, train_loader, optimizer, criterion, epoch)
-
-model.eval()
-with torch.no_grad():
-    y_pred = torch.argmax(model(X_test.to(device)), dim=1).cpu().numpy()
-
-accuracy = accuracy_score(y_test.numpy(), y_pred)
-print(f'Accuracy: {accuracy}')
+if __name__ == "__main__":
+    main()

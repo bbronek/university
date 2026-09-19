@@ -3,10 +3,12 @@ def squares_of_positives_in_a_list(input_list):
 
     return output_list
 
+
 def main():
-    input_list = [int(x) for x in input("Wprowadz liczby oddzielone spacjami: ").split()]
+    input_list = [int(x) for x in input("Enter numbers separated by spaces: ").split()]
 
     print(f"Output list: {squares_of_positives_in_a_list(input_list)}")
+
 
 if __name__ == "__main__":
     main()

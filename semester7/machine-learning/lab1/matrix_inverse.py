@@ -8,11 +8,12 @@ def main():
     # calculates the inverse of each element
     print(A_inv)
 
-    M = np.matrix([[1, 2], [2, 1]], dtype=float)
-    M_inv = M**-1
+    M = np.array([[1, 2], [2, 1]], dtype=float)
+    M_inv = np.linalg.inv(M)
 
     # correctly determines the inverse matrix
     print(M_inv)
+
 
 if __name__ == "__main__":
     main()
