@@ -5,10 +5,10 @@
 #include <arpa/inet.h> 
 #include <unistd.h>    
 
-int main(int argc, char *argv[])
+int main(void)
 {
        int socket_desc, client_sock, c, read_size;
-       struct sockaddr_in server, client;
+       struct sockaddr_in server = {}, client = {};
        char client_message[2000];
        int out;
 
@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
        socket_desc = socket(AF_INET, SOCK_STREAM, 0);
        if (socket_desc == -1)
        {
-              printf("Could not create socket");
+              perror("socket");
+              return 1;
        }
        puts("Socket created");
 
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
        puts("bind done");
 
        //Listen
-       listen(socket_desc, 3);
+       if (listen(socket_desc, 3) < 0) { perror("listen"); close(socket_desc); return 1; }
 
        //Accept and incoming connection
        puts("Waiting for incoming connections...");
@@ -51,9 +52,9 @@ int main(int argc, char *argv[])
        puts("Connection accepted");
 
        //Receive a message from client
-       int length;
-       while ((read_size = recv(client_sock, client_message, 2000, 0)) > 0)
+       while ((read_size = recv(client_sock, client_message, sizeof(client_message) - 1, 0)) > 0)
        {
+              client_message[read_size] = '\0';
               //Send client number + 1
               out = atoi(client_message) + 1;
               sprintf(client_message, "%d", out);
@@ -70,5 +71,7 @@ int main(int argc, char *argv[])
               perror("recv failed");
        }
 
+       close(client_sock);
+       close(socket_desc);
        return 0;
 }

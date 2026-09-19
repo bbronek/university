@@ -13,7 +13,7 @@
 #define FALSE  0
 #define PORT 8888
 
-int main(int argc , char *argv[])
+int main(void)
 {
         int opt = TRUE;
         int master_socket , addrlen , new_socket , client_socket[30] , max_clients = 30 , activity, i , valread , sd;
@@ -35,7 +35,7 @@ int main(int argc , char *argv[])
         }
 
         //create a master socket
-        if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0)
+        if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) < 0)
         {
                 perror("socket failed");
                 exit(EXIT_FAILURE);
@@ -99,9 +99,10 @@ int main(int argc , char *argv[])
                 //wait for an activity on one of the sockets , timeout is NULL , so wait indefinitely
                 activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
 
-                if ((activity < 0) && (errno!=EINTR))
-                {
-                        printf("select error");
+                if (activity < 0) {
+                    if (errno == EINTR) continue;
+                    perror("select");
+                    return 1;
                 }
 
                 //If something happened on the master socket , then its an incoming connection
@@ -143,10 +144,10 @@ int main(int argc , char *argv[])
                 {
                         sd = client_socket[i];
 
-                        if (FD_ISSET( sd , &readfds))
+                        if (sd > 0 && FD_ISSET(sd, &readfds))
                         {
                                 //Check if it was for closing , and also read the incoming message
-                                if ((valread = read( sd , buffer, 1024)) == 0)
+                                if ((valread = read( sd , buffer, 1024)) <= 0)
                                 {
                                         //Somebody disconnected , get his details and print
                                         getpeername(sd , (struct sockaddr*)&address , (socklen_t*)&addrlen);
@@ -165,9 +166,9 @@ int main(int argc , char *argv[])
                                         // send message to other clients
                                         for(int j = 0; j < max_clients; j++) {
                                                 sd = client_socket[j];
-                                                if(j != i)
+                                                if(j != i && sd > 0)
                                                 {
-                                                        send(sd , buffer , strlen(buffer) , 0 );
+                                                        send(sd, buffer, valread, MSG_NOSIGNAL);
                                                 }
                                                 
                                         }

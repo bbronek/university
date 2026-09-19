@@ -8,7 +8,7 @@
 #define BUFLEN 512  //Max length of buffer
 #define PORT 8888   //The port on which to listen for incoming data
 
-void die(char *s)
+void die(const char *s)
 {
         perror(s);
         exit(1);
@@ -18,7 +18,7 @@ int main(void)
 {
         struct sockaddr_in si_me, si_other;
 	socklen_t  slen = sizeof(si_other);
-        int s, i , recv_len;
+        int s, recv_len;
         char buf[BUFLEN];
 
         //create a UDP socket
@@ -48,7 +48,7 @@ int main(void)
                 fflush(stdout);
 
                 //try to receive some data, this is a blocking call
-                if ((recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+                if ((recv_len = recvfrom(s, buf, BUFLEN - 1, 0, (struct sockaddr *) &si_other, &slen)) == -1)
                 {
                         die("recvfrom()");
                 }

@@ -7,18 +7,17 @@
 #include <netdb.h>
 #include <string.h>
 
-int main(int argc, char *argv[]) {
+int main(void) {
         char abcd[512];
         int sockfd, portno, n;
-        struct sockaddr_in serv_addr;
-        struct hostent *server;
+        struct sockaddr_in serv_addr = {};
 
         char buffer[256];
 
-        printf("Podaj adres IP odbiorcy: ");
-        scanf("%s", abcd);
-        printf("Podaj numer portu odbiorcy: ");
-        scanf("%u", &portno);
+        printf("Enter the recipient IP address: ");
+        if (scanf("%511s", abcd) != 1) return 1;
+        printf("Enter the recipient port: ");
+        if (scanf("%d", &portno) != 1 || portno < 1 || portno > 65535) return 1;
 
         /* Create a socket point */
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -44,7 +43,7 @@ int main(int argc, char *argv[]) {
 
         printf("Please enter the message: ");
         bzero(buffer,256);
-        scanf("%s", buffer);
+        if (scanf("%255s", buffer) != 1) return 1;
 
         /* Send message to the server */
         n = write(sockfd, buffer, strlen(buffer));
@@ -64,5 +63,6 @@ int main(int argc, char *argv[]) {
         }
 
         printf("%s\n",buffer);
+        close(sockfd);
         return 0;
 }
