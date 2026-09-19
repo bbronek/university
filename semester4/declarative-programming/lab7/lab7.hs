@@ -5,7 +5,7 @@ readInt :: [Char] -> Int
 readInt x = read x :: Int
 
 -- task 1
-fun1 = do
+arithmeticPrompt = do
   putStr "Enter the first number: "
   a <- getLine
 
@@ -15,11 +15,11 @@ fun1 = do
   let union = readInt a + readInt b
   let intersection = readInt a * readInt b
   let difference = readInt a - readInt b
-  
-  putStrLn(a ++ "+" ++ b ++ "=" ++ show union ++ " " ++ a ++ "*" ++ b ++ "=" ++ show intersection ++ " " ++ a ++ "-" ++ b ++ "=" ++ show difference)
+
+  putStrLn (a ++ "+" ++ b ++ "=" ++ show union ++ " " ++ a ++ "*" ++ b ++ "=" ++ show intersection ++ " " ++ a ++ "-" ++ b ++ "=" ++ show difference)
 
 -- task 2
-fun2 = do
+birthDatePrompt = do
   putStr "Enter your first name: "
   firstName <- getLine
 
@@ -29,7 +29,7 @@ fun2 = do
   putStr "Enter your PESEL: "
   pesel <- getLine
 
-  if length pesel /= 11 || any (`notElem` ['0'..'9']) pesel
+  if length pesel /= 11 || any (`notElem` ['0' .. '9']) pesel
     then putStrLn "PESEL must contain 11 digits"
     else do
       let encodedYear = readInt (take 2 pesel)
@@ -46,9 +46,10 @@ fun2 = do
 
 -- task 3
 greatestCommonDivisor = gcd
+
 leastCommonMultiple = lcm
 
-fun3 = do
+gcdAndLcmPrompt = do
   putStr "Enter the first number: "
   a <- getLine
 
@@ -61,32 +62,51 @@ fun3 = do
   let gcdResult = greatestCommonDivisor firstNumber secondNumber
   let lcmResult = leastCommonMultiple firstNumber secondNumber
 
-  putStrLn("GCD" ++ "(" ++ show firstNumber ++ "," ++ show secondNumber ++ ")" ++ "=" ++ show gcdResult  
-            ++ " LCM" ++ "(" ++ show firstNumber ++ "," ++ show secondNumber ++ ")" ++ "=" ++ show lcmResult)
+  putStrLn
+    ( "GCD"
+        ++ "("
+        ++ show firstNumber
+        ++ ","
+        ++ show secondNumber
+        ++ ")"
+        ++ "="
+        ++ show gcdResult
+        ++ " LCM"
+        ++ "("
+        ++ show firstNumber
+        ++ ","
+        ++ show secondNumber
+        ++ ")"
+        ++ "="
+        ++ show lcmResult
+    )
 
 -- task 4
-fun4 = do
+shorterWordPrompt = do
   putStr "Enter the first word: "
   string1 <- getLine
 
   putStr "Enter the second word: "
   string2 <- getLine
 
-  let result = if length string1 < length string2 then string1
-               else string2
+  let result =
+        if length string1 < length string2
+          then string1
+          else string2
 
-  putStrLn("Shorter word: " ++ result)
+  putStrLn ("Shorter word: " ++ result)
 
 -- task 5
-fun5 = do
+guessNumber = do
   let x = 42
   print "Guess a number from 0 to 99 in 10 attempts"
-  loop x 1 where
+  loop x 1
+  where
     loop :: Integer -> Integer -> IO ()
     loop x tries = do
       guess <- readLn :: IO Integer
-      if tries <= 10 then 
-        case compare guess x of
+      if tries <= 10
+        then case compare guess x of
           LT -> do
             putStrLn "Too small!"
             loop x $ succ tries
@@ -95,5 +115,5 @@ fun5 = do
             loop x $ succ tries
           EQ -> do
             print "Correct!"
-      else 
-        print "You have used all 10 attempts!"
+        else
+          print "You have used all 10 attempts!"

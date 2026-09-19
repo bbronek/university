@@ -42,7 +42,7 @@ end,
 
 printf('\n');
 
-x = poly(0,"x"); 
+x = poly(0,"x");
 
 for i=1:n,
     if i == n,

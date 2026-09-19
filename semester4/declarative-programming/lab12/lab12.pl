@@ -7,7 +7,7 @@ intersection([],_,[]).
 union([X|Y],Z,W) :- member(X,Z),  union(Y,Z,W).
 union([X|Y],Z,[X|W]) :- \+ member(X,Z), union(Y,Z,W).
 union([],Z,Z).
-        
+
 subtract([], _, []).
 subtract([X|Y], W, Z) :- memberchk(X, W), !, subtract(Y, W, Z).
 subtract([X|Y], W, [X|Z]) :- subtract(Y, W, Z).

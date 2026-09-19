@@ -1,15 +1,16 @@
 import Control.Monad
-import System.Environment 
-import Text.ParserCombinators.Parsec
 import Data.Bool
+import System.Environment
+import Text.ParserCombinators.Parsec
 
-data LogicExpr = BOOL Bool
-              | AND LogicExpr LogicExpr 
-              | OR LogicExpr LogicExpr 
-              | NOT LogicExpr
-              | PARENS LogicExpr
+data LogicExpr
+  = BOOL Bool
+  | AND LogicExpr LogicExpr
+  | OR LogicExpr LogicExpr
+  | NOT LogicExpr
+  | PARENS LogicExpr
 
--- Skip whitespaces 
+-- Skip whitespaces
 whitespace :: Parser ()
 whitespace = void $ many $ oneOf " \n\t"
 
@@ -34,12 +35,15 @@ parseParens = do
   return $ PARENS expr
 
 parseTerm :: Parser LogicExpr
-parseTerm = (NOT <$> (skipWhiteSpaces (string "NOT") *> parseTerm))
-            <|> parseBool <|> parseParens
+parseTerm =
+  (NOT <$> (skipWhiteSpaces (string "NOT") *> parseTerm))
+    <|> parseBool
+    <|> parseParens
 
 parseExpr :: Parser LogicExpr
 parseExpr = chainl1 conjunction (OR <$ skipWhiteSpaces (string "OR"))
-  where conjunction = chainl1 parseTerm (AND <$ skipWhiteSpaces (string "AND"))
+  where
+    conjunction = chainl1 parseTerm (AND <$ skipWhiteSpaces (string "AND"))
 
 parseExpr2 :: Parser LogicExpr
 parseExpr2 = whitespace *> parseExpr <* eof
@@ -60,7 +64,6 @@ eval (NOT expression) = not (eval expression)
 eval (AND a b) = (eval a) && (eval b)
 eval (OR a b) = (eval a) || (eval b)
 eval (PARENS m) = eval m
-
 
 -- Usage example
 -- in: showExpr (AND (BOOL True) (BOOL False))

@@ -1,14 +1,18 @@
 module ListSet (intersection, union, difference, isSubset) where
-  import Data.List (delete)
 
-  intersection [] _ = []
-  intersection (x:xs) l | elem x l = x : intersection xs l
-                  | otherwise = intersection xs l
-  union [] ys = ys
-  union (x:xs) ys = x : union xs (delete x ys)
+import Data.List (delete)
 
-  difference [] ys = []
-  difference (x:xs) ys = if (elem x ys) then difference xs ys
-                      else x:difference xs ys
+intersection [] _ = []
+intersection (value : rest) values
+  | value `elem` values = value : intersection rest values
+  | otherwise = intersection rest values
 
-  isSubset xs ys = all (`elem` ys) xs
+union [] values = values
+union (value : rest) values = value : union rest (delete value values)
+
+difference [] _ = []
+difference (value : rest) values
+  | value `elem` values = difference rest values
+  | otherwise = value : difference rest values
+
+isSubset values candidates = all (`elem` candidates) values
