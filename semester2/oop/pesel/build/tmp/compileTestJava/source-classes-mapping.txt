@@ -1,4 +1,0 @@
-AppTest.java
- AppTest
-InhabitantTest.java
- InhabitantTest
