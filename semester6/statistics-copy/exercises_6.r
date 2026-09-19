@@ -1,8 +1,0 @@
-year = c(1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002)
-cases = c(39.7, 38.2, 34.7, 33.1, 30.1, 28.4, 26.3, 24.7)
-data_set = data.frame(year = year, cases = cases)
-head(data_set)
-plot(data_set, main = "Cases by year ", pch = 16)
-model = lm(cases ~ year, data = data_set)
-plot(data_set, main = "Cases by year", pch = 16)
-abline(model, col = "red", lwd = 2)
