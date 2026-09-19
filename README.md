@@ -1,5 +1,6 @@
 # University
-Everything from my Bachelor of Engineering in Computer Science at Adam Mickiewicz University in Poland.
+
+Everything here is from my Bachelor of Engineering in Computer Science at Adam Mickiewicz University in Poland.
 
 | Semester | Courses |
 |:---:|---|
