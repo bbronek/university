@@ -5,4 +5,3 @@ module Bank
     class PaymentCard < BankCard; end
   end
 end
-

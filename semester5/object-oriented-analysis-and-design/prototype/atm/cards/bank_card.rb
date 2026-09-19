@@ -30,4 +30,3 @@ module Bank
     end
   end
 end
-
