@@ -3,36 +3,19 @@ public abstract class Student {
     private String surname;
     private String index;
 
-    public Student() {
-    }
+    public Student() {}
 
-    public Student(String index) {
-        this.index = index;
-    }
+    public Student(String index) { this.index = index; }
 
-    public String getIndex() {
-        return index;
-    }
+    public String getIndex() { return index; }
 
-    public  void setIndex(String index){
-        this.index = index;
-    }
+    public void setIndex(String index) { this.index = index; }
 
-    public String getName(){
-        return name;
-    }
+    public String getName() { return name; }
 
-    public void setName(String name){
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String getSurname(){
-        return surname;
-    }
+    public String getSurname() { return surname; }
 
-    public void setSurname(String surname){
-        this.surname = surname;
-    }
-
-
+    public void setSurname(String surname) { this.surname = surname; }
 }

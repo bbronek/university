@@ -14,11 +14,13 @@ public class ConnMySQL {
 
     public static void main(String[] args) throws Exception {
         String url = environment("URL") + environment("DBNAME");
-        try (Connection connection = DriverManager.getConnection(url, environment("DBUSER"), environment("PASSWORD"));
+        try (Connection connection =
+                 DriverManager.getConnection(url, environment("DBUSER"), environment("PASSWORD"));
              Statement statement = connection.createStatement();
              ResultSet rows = statement.executeQuery(environment("QUERY"))) {
             while (rows.next()) {
-                System.out.println(rows.getString(environment("COLUMN1")) + " " + rows.getString(environment("COLUMN2")));
+                System.out.println(rows.getString(environment("COLUMN1")) + " " +
+                                   rows.getString(environment("COLUMN2")));
             }
         }
     }

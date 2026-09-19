@@ -1,46 +1,27 @@
 abstract class Student {
 
     String Index;
-    public Student (String Index)
-    {
-        this.Index = Index;
-    }
-    public void setIndex(String Index)
-    {
-        this.Index = Index;
-    }
-    public String getIndex()
-    {
-        return this.Index;
-    }
+    public Student(String Index) { this.Index = Index; }
+    public void setIndex(String Index) { this.Index = Index; }
+    public String getIndex() { return this.Index; }
 }
 
-class FullTimeStudent extends Student
-{
+class FullTimeStudent extends Student {
     private static int count = 0;
-    public FullTimeStudent(String Index)
-    {
+    public FullTimeStudent(String Index) {
         super(Index);
-        count ++;
+        count++;
     }
-    public static int getCount()
-    {
-        return count;
-    }
+    public static int getCount() { return count; }
 }
 
-class PartTimeStudent extends Student
-{
+class PartTimeStudent extends Student {
     private static int count = 0;
-    public PartTimeStudent(String Index)
-    {
+    public PartTimeStudent(String Index) {
         super(Index);
-        count ++;
+        count++;
     }
-    public static int getCount()
-    {
-        return count;
-    }
+    public static int getCount() { return count; }
 }
 
 public class StudentCounts {
@@ -52,13 +33,13 @@ public class StudentCounts {
         Student s5 = new FullTimeStudent("111111");
 
         s1.setIndex("9997");
-        System.out.println("Full-time: "+ FullTimeStudent.getCount());
-        System.out.println("Part-time: "+ PartTimeStudent.getCount());
+        System.out.println("Full-time: " + FullTimeStudent.getCount());
+        System.out.println("Part-time: " + PartTimeStudent.getCount());
         System.out.println("");
-        System.out.println("Student 1: "+s1.getIndex());
-        System.out.println("Student 2: "+s2.getIndex());
-        System.out.println("Student 3: "+s3.getIndex());
-        System.out.println("Student 4: "+s4.getIndex());
-        System.out.println("Student 5: "+s5.getIndex());
+        System.out.println("Student 1: " + s1.getIndex());
+        System.out.println("Student 2: " + s2.getIndex());
+        System.out.println("Student 3: " + s3.getIndex());
+        System.out.println("Student 4: " + s4.getIndex());
+        System.out.println("Student 5: " + s5.getIndex());
     }
 }

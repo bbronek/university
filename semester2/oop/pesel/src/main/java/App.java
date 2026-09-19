@@ -38,32 +38,37 @@ public class App {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 System.out.println("Enter your city:");
-                if (!scanner.hasNextLine()) break;
+                if (!scanner.hasNextLine())
+                    break;
                 String city = scanner.nextLine();
                 System.out.println("Enter first name, last name, and PESEL:");
-                if (!scanner.hasNextLine()) break;
+                if (!scanner.hasNextLine())
+                    break;
                 String[] fields = scanner.nextLine().trim().split("\\s+");
                 try {
-                    if (fields.length != 3) throw new PeselException("Expected three fields");
+                    if (fields.length != 3)
+                        throw new PeselException("Expected three fields");
                     checkPesel(fields[2]);
                     Inhabitant inhabitant = new Inhabitant();
                     inhabitant.setCity(city);
                     inhabitant.setFirstName(fields[0]);
                     inhabitant.setLastName(fields[1]);
                     inhabitant.setPesel(fields[2]);
-                    if (modifyData(inhabitant, inhabitants)) inhabitants.add(inhabitant);
+                    if (modifyData(inhabitant, inhabitants))
+                        inhabitants.add(inhabitant);
                 } catch (PeselException exception) {
                     System.out.println(exception.getMessage());
                 }
                 System.out.println("Add another inhabitant? Enter y or n:");
-                if (!scanner.hasNextLine() || !scanner.nextLine().equalsIgnoreCase("y")) break;
+                if (!scanner.hasNextLine() || !scanner.nextLine().equalsIgnoreCase("y"))
+                    break;
             }
         }
         Path output = Path.of(args.length > 0 ? args[0] : "inhabitants.txt");
         try (BufferedWriter writer = Files.newBufferedWriter(output)) {
             for (Inhabitant inhabitant : inhabitants) {
                 writer.write(String.join(" ", inhabitant.getCity(), inhabitant.getFirstName(),
-                        inhabitant.getLastName(), inhabitant.getPesel()));
+                                         inhabitant.getLastName(), inhabitant.getPesel()));
                 writer.newLine();
             }
         }

@@ -4,5 +4,10 @@ def gcd(a, b):
     return a
 
 
-a = input().split()
-print(gcd(int(a[0]), int(a[1])))
+def main():
+    a = input().split()
+    print(gcd(int(a[0]), int(a[1])))
+
+
+if __name__ == "__main__":
+    main()

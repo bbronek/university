@@ -3,14 +3,10 @@ public class PartTimeStudent extends Student {
 
     public PartTimeStudent() { this(""); }
 
-    public PartTimeStudent(String index){
+    public PartTimeStudent(String index) {
         super(index);
-        count ++;
+        count++;
     }
 
-    public static int getCount(){
-        return count;
-    }
-
-
+    public static int getCount() { return count; }
 }

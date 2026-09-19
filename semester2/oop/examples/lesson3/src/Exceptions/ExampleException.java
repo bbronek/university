@@ -1,5 +1,3 @@
 package Exceptions;
 
-public class ExampleException extends Throwable{
-
-}
+public class ExampleException extends Throwable {}

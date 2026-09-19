@@ -117,7 +117,6 @@ CREATE TABLE Vehicle_equipment
 );
 
 
-
 CREATE TABLE Dealer_model
 (
     Dealer_name        VARCHAR(20) REFERENCES Dealer(name),
@@ -163,7 +162,6 @@ INSERT INTO Model_engine VALUES ('12345','24');
 INSERT INTO Model_engine VALUES ('54879','24');
 
 INSERT INTO Equipment VALUES ('keychain');
-
 
 
 INSERT INTO Dealer Values ('Karl', 'SchwarzStraBe');

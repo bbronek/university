@@ -3,15 +3,15 @@ package Equals;
 public class Car {
     private final int year;
 
-    public Car(int year) {
-        this.year = year;
-    }
+    public Car(int year) { this.year = year; }
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
-        return year == ((Car) other).year;
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return year == ((Car)other).year;
     }
 
     @Override
@@ -30,7 +30,7 @@ class BigCar extends Car {
 
     @Override
     public boolean equals(Object other) {
-        return super.equals(other) && weight == ((BigCar) other).weight;
+        return super.equals(other) && weight == ((BigCar)other).weight;
     }
 
     @Override
