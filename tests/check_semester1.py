@@ -34,6 +34,11 @@ def main():
         assert tree.get_min() == (min(remaining) if remaining else None)
         assert tree.get_max() == (max(remaining) if remaining else None)
 
+    multiply = runpy.run_path(
+        str(SEMESTER / "programming-foundations/lab12/matrix_multiplication.py")
+    )["multiply"]
+    assert multiply([[1, 2], [3, 4]], [[5], [6]]) == [[17], [39]]
+
     scripts = [
         (
             "lab11/string_collection.py",
@@ -59,6 +64,12 @@ def main():
 
     with tempfile.TemporaryDirectory() as temporary:
         checks = [
+            ("programming-foundations/lab9/two_largest.c", "3\n9 2 3\n", "9 3"),
+            (
+                "programming-foundations/lab9/two_largest_variant.c",
+                "3\n-1 -1 -2\n",
+                "-1 -1",
+            ),
             (
                 "algorithms-and-data-structures/c/lab4/merge_sort.c",
                 "6\n2147483647 -1 0 5 5 -9\n",

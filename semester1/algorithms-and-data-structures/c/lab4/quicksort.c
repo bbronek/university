@@ -1,41 +1,43 @@
 #include <stdio.h>
 
 void swap(int *a, int *b) {
-  int temp = *a;
-  *a = *b;
-  *b = temp;
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-int partition(int A[], int p, int r) {
-  int x = A[r];
-  int i = p - 1;
-  for (int j = p; j < r; ++j) {
-    if (A[j] <= x) {
-      i = i + 1;
-      swap(&A[i], &A[j]);
+int partition(int values[], int left, int right) {
+    int pivot = values[right];
+    int i = left - 1;
+    for (int j = left; j < right; ++j) {
+        if (values[j] <= pivot) {
+            i = i + 1;
+            swap(&values[i], &values[j]);
+        }
     }
-  }
-  swap(&A[i + 1], &A[r]);
-  return i + 1;
+    swap(&values[i + 1], &values[right]);
+    return i + 1;
 }
-void quickSort(int A[], int p, int r) {
-  if (p < r) {
-    int q = partition(A, p, r);
-    quickSort(A, p, q - 1);
-    quickSort(A, q + 1, r);
-  }
+void quick_sort(int values[], int left, int right) {
+    if (left < right) {
+        int middle = partition(values, left, right);
+        quick_sort(values, left, middle - 1);
+        quick_sort(values, middle + 1, right);
+    }
 }
 
-int A[1000], n;
-int main() {
-  scanf("%d", &n);
-  for (int i = 0; i < n; ++i) {
-    scanf("%d", &A[i]);
-  }
-  quickSort(A, 0, n - 1);
-  for (int i = 0; i < n; ++i) {
-    printf("%d ", A[i]);
-  }
+int main(void) {
+    int values[1000], length = 0;
+    if (scanf("%d", &length) != 1 || length < 0 || length > 1000)
+        return 1;
+    for (int i = 0; i < length; ++i) {
+        if (scanf("%d", &values[i]) != 1)
+            return 1;
+    }
+    quick_sort(values, 0, length - 1);
+    for (int i = 0; i < length; ++i) {
+        printf("%d ", values[i]);
+    }
 
-  return 0;
+    return 0;
 }

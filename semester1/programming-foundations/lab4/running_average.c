@@ -1,29 +1,35 @@
 #include <stdio.h>
 
-void avg(double s, int n) { printf("%.2f", s / n); }
-
-void put(int v[], int n) {
-  for (int i = 0; i < n; ++i) {
-    printf("%d ", v[i]);
-  }
+void print_average(double total, int n) {
+    if (n > 0)
+        printf("%.2f", total / n);
 }
 
-int v[1010], i = 0, x;
-double s = 0;
-int main() {
-  do {
-    scanf("%d", &x);
-    if (x == 1)
-      avg(s, i);
-    if (x == 0)
-      put(v, i);
-    else if (x > 1) {
-      v[i] = x;
-      s += v[i];
-      ++i;
+void print_values(int values[], int n) {
+    for (int count = 0; count < n; ++count) {
+        printf("%d ", values[count]);
     }
+}
 
-  } while (x != -1);
+int main(void) {
+    double total = 0;
+    int values[1010], count = 0, command = 0;
+    do {
+        if (scanf("%d", &command) != 1)
+            return 1;
+        if (command == 1)
+            print_average(total, count);
+        if (command == 0)
+            print_values(values, count);
+        else if (command > 1) {
+            if (count == 1010)
+                return 1;
+            values[count] = command;
+            total += values[count];
+            ++count;
+        }
 
-  return 0;
+    } while (command != -1);
+
+    return 0;
 }

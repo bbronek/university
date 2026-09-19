@@ -3,8 +3,8 @@ import sys
 
 def main():
     next(sys.stdin)
-    v = [int(x) for x in next(sys.stdin).split()]
-    print(max(v))
+    heights = [int(height) for height in next(sys.stdin).split()]
+    print(max(heights))
 
 
 if __name__ == "__main__":

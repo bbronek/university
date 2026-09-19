@@ -1,9 +1,9 @@
 def main():
-    x = int(input())
-    v = input().split(" ")
-    v.reverse()
-    for i in v:
-        print(int(i), end=" ")
+    count = int(input())
+    values = input().split(" ")
+    values.reverse()
+    for value in values:
+        print(int(value), end=" ")
 
 
 if __name__ == "__main__":

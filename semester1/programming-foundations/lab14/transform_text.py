@@ -1,25 +1,25 @@
 import sys
 
 
-def generate(line):
-    new = ""
-    for x in line:
-        if x == "&":
-            x = ""
-        if x.isdigit():
-            if x == "9":
-                x = "0"
+def transform(line):
+    result = ""
+    for character in line:
+        if character == "&":
+            character = ""
+        if character.isdigit():
+            if character == "9":
+                character = "0"
             else:
-                x = chr(ord(x) + 1)
-        x = x.upper()
-        new += x
-    return new
+                character = chr(ord(character) + 1)
+        character = character.upper()
+        result += character
+    return result
 
 
 def main():
     for line in sys.stdin:
         line = line.rstrip("\n")
-        print(generate(line))
+        print(transform(line))
 
 
 if __name__ == "__main__":

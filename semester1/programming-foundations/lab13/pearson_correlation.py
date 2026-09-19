@@ -2,45 +2,37 @@ import math
 from statistics import mean
 
 
-def average(x):
-    return mean(x)
-
-
-def pearson(x, y):
-    if len(x) != len(y) or len(x) < 2:
+def pearson(first, second):
+    if len(first) != len(second) or len(first) < 2:
         raise ValueError("Expected equally sized samples with at least two values")
-    n = len(x)
-    ax = average(x)
-    ay = average(y)
-    diffprod = 0
-    xdiff2 = 0
-    ydiff2 = 0
+    n = len(first)
+    first_mean = mean(first)
+    second_mean = mean(second)
+    covariance = 0
+    first_variance = 0
+    second_variance = 0
     for i in range(n):
-        xdiff = x[i] - ax
-        ydiff = y[i] - ay
-        diffprod += xdiff * ydiff
-        xdiff2 += xdiff * xdiff
-        ydiff2 += ydiff * ydiff
-    downx = math.sqrt(xdiff2)
-    downy = math.sqrt(ydiff2)
-    down = downx * downy
-    if down == 0:
+        first_difference = first[i] - first_mean
+        second_difference = second[i] - second_mean
+        covariance += first_difference * second_difference
+        first_variance += first_difference * first_difference
+        second_variance += second_difference * second_difference
+    first_deviation = math.sqrt(first_variance)
+    second_deviation = math.sqrt(second_variance)
+    denominator = first_deviation * second_deviation
+    if denominator == 0:
         raise ValueError("Correlation is undefined for a constant sample")
-    return diffprod / down
+    return covariance / denominator
 
 
 def main():
-    vx = []
-    vy = []
-    x = int(input())
-    for line in range(x):
-        line = input()
-        line = line.strip().split()
-        vx.append((line[0]))
-        vy.append((line[1]))
-    vx = [int(x) for x in vx]
-    vy = [int(x) for x in vy]
-    print(f"{pearson(vx,vy):.2f}")
+    count = int(input())
+    pairs = [tuple(map(float, input().split())) for _ in range(count)]
+    if any(len(pair) != 2 for pair in pairs):
+        raise ValueError("Expected two numbers per row")
+    first_sample = [pair[0] for pair in pairs]
+    second_sample = [pair[1] for pair in pairs]
+    print(f"{pearson(first_sample, second_sample):.2f}")
 
 
 if __name__ == "__main__":

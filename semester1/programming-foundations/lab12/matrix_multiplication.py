@@ -1,22 +1,42 @@
-import sys
+def multiply(first, second):
+    if not first or not second or not second[0]:
+        raise ValueError("Matrices must be nonempty")
+    inner = len(second)
+    columns = len(second[0])
+    if any(len(row) != inner for row in first) or any(
+        len(row) != columns for row in second
+    ):
+        raise ValueError("Incompatible matrix dimensions")
+    return [
+        [
+            sum(left * right for left, right in zip(row, column))
+            for column in zip(*second)
+        ]
+        for row in first
+    ]
 
-W1 = [int(x) for x in next(sys.stdin).split()]
-M1 = []
-for line in range(W1[0]):
-    M1.append([float(x) for x in next(sys.stdin).split()])
-W2 = [int(x) for x in next(sys.stdin).split()]
-if W1[1] == W2[0]:
-    M2 = []
-    for line in range(W2[0]):
-        M2.append([float(x) for x in next(sys.stdin).split()])
-    R = [[float(0) for i in range(W2[1])] for j in range(W1[0])]
-    for i in range(0, W1[0]):
-        for j in range(0, W2[1]):
-            for k in range(0, W1[1]):
-                R[i][j] += M1[i][k] * M2[k][j]
-    for line in R:
-        for item in line:
-            print("{:.1f} ".format(item), end="")
-        print("\n", end="")
-else:
-    print("ERROR")
+
+def read_matrix():
+    rows, columns = map(int, input().split())
+    if rows <= 0 or columns <= 0:
+        raise ValueError("Matrix dimensions must be positive")
+    matrix = [list(map(float, input().split())) for _ in range(rows)]
+    if any(len(row) != columns for row in matrix):
+        raise ValueError("Unexpected row length")
+    return matrix
+
+
+def main():
+    try:
+        first = read_matrix()
+        second = read_matrix()
+        result = multiply(first, second)
+    except ValueError:
+        print("ERROR")
+        return
+    for row in result:
+        print(" ".join(f"{value:.1f}" for value in row))
+
+
+if __name__ == "__main__":
+    main()

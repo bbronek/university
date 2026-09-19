@@ -1,33 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-long long rabbit_population(long long n, long long v[]) {
-  if (v[n] != -1)
-    return v[n];
-  if (n <= 4)
-    return 1;
-  if (n == 5)
-    v[n] = rabbit_population(n - 1, v) + 3 * rabbit_population(n - 4, v);
-  else
-    v[n] = rabbit_population(n - 1, v) + 3 * rabbit_population(n - 4, v) -
-           2 * rabbit_population(n - 5, v);
-  return v[n];
+long long rabbit_population(long long month, long long cache[]) {
+    if (cache[month] != -1)
+        return cache[month];
+    if (month <= 4)
+        return 1;
+    if (month == 5)
+        cache[month] =
+            rabbit_population(month - 1, cache) + 3 * rabbit_population(month - 4, cache);
+    else
+        cache[month] = rabbit_population(month - 1, cache) +
+                       3 * rabbit_population(month - 4, cache) -
+                       2 * rabbit_population(month - 5, cache);
+    return cache[month];
 }
 
-int main() {
+int main(void) {
 
-  int t;
-  long long *v, n;
-  scanf("%d", &t);
-  v = (long long *)malloc((101) * sizeof(long long));
-  for (int i = 0; i <= 100; ++i) {
-    v[i] = -1;
-  }
+    int case_count = 0;
+    long long *cache, month = 0;
+    if (scanf("%d", &case_count) != 1)
+        return 1;
+    cache = (long long *)malloc((101) * sizeof(long long));
+    for (int i = 0; i <= 100; ++i) {
+        cache[i] = -1;
+    }
 
-  for (int i = 0; i < t; ++i) {
-    scanf("%lld", &n);
-    printf("%lld", rabbit_population(n, v));
-  }
+    for (int i = 0; i < case_count; ++i) {
+        if (scanf("%lld", &month) != 1)
+            return 1;
+        printf("%lld", rabbit_population(month, cache));
+    }
 
-  return 0;
+    return 0;
 }

@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-float j, x, y, z;
 int main(void) {
-  scanf("%f%f%f%f", &j, &x, &y, &z);
-  printf("%.2f", (z - (x * j)) / y);
+    float apple_count, apple_price, orange_price, total_price;
+    scanf("%f%f%f%f", &apple_count, &apple_price, &orange_price, &total_price);
+    printf("%.2f", (total_price - (apple_price * apple_count)) / orange_price);
 
-  return 0;
+    return 0;
 }

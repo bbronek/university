@@ -1,91 +1,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int heapsize = 0;
-typedef struct elem {
-  int id;
-  int priority;
-} elem;
+int heap_size = 0;
+typedef struct Employee {
+    int id;
+    int priority;
+} Employee;
 
-elem A[1000001];
+Employee heap[1000001];
 
-void swap(elem *x, elem *y) {
-  elem temp = *x;
-  *x = *y;
-  *y = temp;
+void swap(Employee *priority, Employee *y) {
+    Employee temp = *priority;
+    *priority = *y;
+    *y = temp;
 }
 
-int PARENT(int i) { return i / 2; }
+int parent(int i) { return i / 2; }
 
-int LEFT(int i) { return 2 * i; }
+int left(int i) { return 2 * i; }
 
-int RIGHT(int i) { return 2 * i + 1; }
+int right(int i) { return 2 * i + 1; }
 
-void MAX_HEAPIFY(elem A[], int i) {
-  int X = i;
+void heapify(Employee heap[], int i) {
+    int largest = i;
 
-  if (((RIGHT(i) <= heapsize) && (A[RIGHT(i)].priority > A[X].priority)) ||
-      ((RIGHT(i) <= heapsize) && (A[RIGHT(i)].priority == A[X].priority) &&
-       (A[RIGHT(i)].id < A[X].id)))
-    X = RIGHT(i);
-  if (((LEFT(i) <= heapsize) && (A[LEFT(i)].priority > A[X].priority)) ||
-      ((LEFT(i) <= heapsize) && (A[LEFT(i)].priority == A[X].priority) &&
-       (A[LEFT(i)].id < A[X].id)))
-    X = LEFT(i);
-  if (X != i) {
-    swap(&A[X], &A[i]);
-    MAX_HEAPIFY(A, X);
-  }
-}
-
-int HEAP_EXTRACT_MAX(elem A[]) {
-
-  elem Max = A[1];
-  A[1] = A[heapsize];
-  heapsize -= 1;
-  MAX_HEAPIFY(A, 1);
-  return Max.id;
-}
-
-void HEAP_INCREASE_KEY(elem A[], int i, int key) {
-  if (key < A[i].priority) {
-    printf("ERROR");
-  }
-
-  else {
-    A[i].priority = key;
-    while (i > 1 && (A[i].priority > A[PARENT(i)].priority ||
-                     (A[i].priority == A[PARENT(i)].priority &&
-                      A[i].id < A[PARENT(i)].id))) {
-      swap(&A[i], &A[PARENT(i)]);
-      i = PARENT(i);
+    if (((right(i) <= heap_size) && (heap[right(i)].priority > heap[largest].priority)) ||
+        ((right(i) <= heap_size) && (heap[right(i)].priority == heap[largest].priority) &&
+         (heap[right(i)].id < heap[largest].id)))
+        largest = right(i);
+    if (((left(i) <= heap_size) && (heap[left(i)].priority > heap[largest].priority)) ||
+        ((left(i) <= heap_size) && (heap[left(i)].priority == heap[largest].priority) &&
+         (heap[left(i)].id < heap[largest].id)))
+        largest = left(i);
+    if (largest != i) {
+        swap(&heap[largest], &heap[i]);
+        heapify(heap, largest);
     }
-  }
 }
 
-void MAX_HEAP_INSERT(elem A[], int key, int id) {
+int extract_maximum(Employee heap[]) {
 
-  heapsize += 1;
-  A[heapsize].priority = key;
-  A[heapsize].id = id;
-  HEAP_INCREASE_KEY(A, heapsize, key);
+    Employee maximum = heap[1];
+    heap[1] = heap[heap_size];
+    heap_size -= 1;
+    heapify(heap, 1);
+    return maximum.id;
 }
 
-int n, x, id = 0;
-int main() {
-
-  scanf("%d", &n);
-  for (int i = 0; i < n; ++i) {
-    scanf("%d", &x);
-    if (x == 0 && heapsize > 0) {
-
-      printf("%d\n", HEAP_EXTRACT_MAX(A));
-
-    } else if (x != 0) {
-      id += 1;
-      MAX_HEAP_INSERT(A, x, id);
+void increase_priority(Employee heap[], int i, int key) {
+    if (key < heap[i].priority) {
+        printf("ERROR");
     }
-  }
 
-  return 0;
+    else {
+        heap[i].priority = key;
+        while (i > 1 && (heap[i].priority > heap[parent(i)].priority ||
+                         (heap[i].priority == heap[parent(i)].priority &&
+                          heap[i].id < heap[parent(i)].id))) {
+            swap(&heap[i], &heap[parent(i)]);
+            i = parent(i);
+        }
+    }
+}
+
+void insert_employee(Employee heap[], int key, int id) {
+
+    heap_size += 1;
+    heap[heap_size].priority = key;
+    heap[heap_size].id = id;
+    increase_priority(heap, heap_size, key);
+}
+
+int main(void) {
+    int count = 0, priority = 0, id = 0;
+
+    if (scanf("%d", &count) != 1)
+        return 1;
+    for (int i = 0; i < count; ++i) {
+        if (scanf("%d", &priority) != 1)
+            return 1;
+        if (priority == 0 && heap_size > 0) {
+
+            printf("%d\n", extract_maximum(heap));
+
+        } else if (priority != 0) {
+            id += 1;
+            insert_employee(heap, priority, id);
+        }
+    }
+
+    return 0;
 }

@@ -1,43 +1,45 @@
 #include <stdio.h>
 
 void swap(int *a, int *b) {
-  int t;
+    int values = 0;
 
-  t = *b;
-  *b = *a;
-  *a = t;
+    values = *b;
+    *b = *a;
+    *a = values;
 }
 
-int max_elem(int t[], int i, int n) {
-  int max_idx = i;
+int maximum_index(int values[], int i, int length) {
+    int largest_index = i;
 
-  for (int j = i + 1; j < n; j++)
-    if (t[j] > t[max_idx])
-      max_idx = j;
-  return max_idx;
+    for (int j = i + 1; j < length; j++)
+        if (values[j] > values[largest_index])
+            largest_index = j;
+    return largest_index;
 }
 
-void sort(int t[], int n) {
-  int max;
-  for (int i = 0; i < n; ++i) {
-    max = max_elem(t, i, n);
-    swap(&t[max], &t[i]);
-  }
+void sort(int values[], int length) {
+    int largest = 0;
+    for (int i = 0; i < length; ++i) {
+        largest = maximum_index(values, i, length);
+        swap(&values[largest], &values[i]);
+    }
 }
 
-void printArray(int arr[], int size) {
-  for (int i = 0; i < size; i++)
-    printf("%d", arr[i]);
+void print_array(int arr[], int size) {
+    for (int i = 0; i < size; i++)
+        printf("%d", arr[i]);
 }
 
-int n, v[100];
-int main() {
-  scanf("%d", &n);
-  for (int i = 0; i < n; ++i) {
-    scanf("%d ", &v[i]);
-  }
-  sort(v, n);
-  printArray(v, n);
+int main(void) {
+    int length = 0, values[100];
+    if (scanf("%d", &length) != 1 || length < 0 || length > 100)
+        return 1;
+    for (int i = 0; i < length; ++i) {
+        if (scanf("%d ", &values[i]) != 1)
+            return 1;
+    }
+    sort(values, length);
+    print_array(values, length);
 
-  return 0;
+    return 0;
 }

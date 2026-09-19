@@ -1,8 +1,16 @@
 import sys
+
+
 from itertools import permutations
 
-for n in sys.stdin:
-    n = n.rstrip("\n")
-    n = sorted(n)
-    for p in permutations(n):
-        print("".join(p))
+
+def main():
+    for letters in sys.stdin:
+        letters = letters.rstrip("\n")
+        letters = sorted(letters)
+        for permutation in permutations(letters):
+            print("".join(permutation))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,18 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int a;
-int *array;
-int main() {
-  scanf("%d", &a);
-  array = malloc(a * sizeof(int));
-  for (int i = 0; i < a; ++i) {
-    scanf("%d", &array[i]);
-  }
-  int s = a % 3;
-  for (int i = a - 1 - s; i >= 0; i -= 3) {
-    printf("%d ", array[i]);
-  }
+int main(void) {
+    int length = 0;
+    int *array;
+    if (scanf("%d", &length) != 1 || length < 1 || length > 1000000)
+        return 1;
+    array = malloc(length * sizeof(int));
+    if (array == NULL)
+        return 1;
+    for (int i = 0; i < length; ++i) {
+        if (scanf("%d", &array[i]) != 1)
+            return 1;
+    }
+    int remainder = length % 3;
+    for (int i = length - 1 - remainder; i >= 0; i -= 3) {
+        printf("%d ", array[i]);
+    }
 
-  return 0;
+    free(array);
+    return 0;
 }

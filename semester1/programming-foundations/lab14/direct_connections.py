@@ -2,23 +2,23 @@ import sys
 
 
 def main():
-    d = {}
+    connections = {}
     while 1:
         line = input()
         if line == "END":
             break
         line = line.split(" -> ")
-        x, y = line[0], line[1]
-        if x not in d:
-            d[x] = []
-        if y not in d:
-            d[y] = []
-        d[x].append(y)
+        source, destination = line[0], line[1]
+        if source not in connections:
+            connections[source] = []
+        if destination not in connections:
+            connections[destination] = []
+        connections[source].append(destination)
     for line in sys.stdin:
         line = line.rstrip("\n")
         line = line.split(" ? ")
-        x, y = line[0], line[1]
-        if y in d.get(x, []):
+        source, destination = line[0], line[1]
+        if destination in connections.get(source, []):
             print("YES")
         else:
             print("NO")

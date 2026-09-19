@@ -1,9 +1,9 @@
 def main():
-    x = int(input())
-    v = input().split(" ")
-    v = [int(x) for x in v]
-    for i in v:
-        print(f'B{"I"*i}G B{"O"*i}M{"!"*i}')
+    count = int(input())
+    sizes = input().split(" ")
+    sizes = [int(count) for count in sizes]
+    for size in sizes:
+        print(f'B{"I"*size}G B{"O"*size}M{"!"*size}')
 
 
 if __name__ == "__main__":

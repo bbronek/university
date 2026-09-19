@@ -1,26 +1,21 @@
+#include <limits.h>
 #include <stdio.h>
 
-int n, v[100], max1, max2;
 int main(void) {
-
-  scanf("%d", &n);
-  for (int i = 0; i < n; ++i) {
-    scanf("%d", &v[i]);
-  }
-  max1 = v[0];
-  max2 = v[0];
-  for (int i = 0; i < n; ++i) {
-    if (v[i] > max1) {
-      max2 = max1;
-      max1 = v[i];
-
+    int count = 0, largest = INT_MIN, second_largest = INT_MIN;
+    if (scanf("%d", &count) != 1 || count < 2)
+        return 1;
+    for (int index = 0; index < count; ++index) {
+        int value = 0;
+        if (scanf("%d", &value) != 1)
+            return 1;
+        if (value >= largest) {
+            second_largest = largest;
+            largest = value;
+        } else if (value > second_largest) {
+            second_largest = value;
+        }
     }
-
-    else if (v[i] > max2)
-      max2 = v[i];
-  }
-
-  printf("%d %d", max1, max2);
-
-  return 0;
+    printf("%d %d\n", largest, second_largest);
+    return 0;
 }

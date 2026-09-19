@@ -1,34 +1,35 @@
 #include <stdio.h>
 
-int l, p, b;
-char z;
+char parity;
 int main(void) {
-  scanf("%d%d %c", &l, &p, &z);
-  b = l % 2;
-  if (z == 'e') {
-    if (!(b)) {
-      for (int i = l; i <= p; i += 2) {
-        printf("%d", i);
-      }
+    int start = 0, end = 0, is_odd = 0;
+    if (scanf("%d%d %c", &start, &end, &parity) != 3)
+        return 1;
+    is_odd = start % 2;
+    if (parity == 'e') {
+        if (!(is_odd)) {
+            for (int i = start; i <= end; i += 2) {
+                printf("%d", i);
+            }
+        }
+        if (is_odd) {
+            for (int i = start + 1; i <= end; i += 2) {
+                printf("%d", i);
+            }
+        }
     }
-    if (b) {
-      for (int i = l + 1; i <= p; i += 2) {
-        printf("%d", i);
-      }
+    if (parity == 'o') {
+        if (!(is_odd)) {
+            for (int i = start + 1; i <= end; i += 2) {
+                printf("%d", i);
+            }
+        }
+        if (is_odd) {
+            for (int i = start; i <= end; i += 2) {
+                printf("%d", i);
+            }
+        }
     }
-  }
-  if (z == 'o') {
-    if (!(b)) {
-      for (int i = l + 1; i <= p; i += 2) {
-        printf("%d", i);
-      }
-    }
-    if (b) {
-      for (int i = l; i <= p; i += 2) {
-        printf("%d", i);
-      }
-    }
-  }
 
-  return 0;
+    return 0;
 }

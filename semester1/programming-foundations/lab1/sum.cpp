@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
-int main() {
-  int n, m;
-  cin >> n >> m;
-  cout << n + m;
-  return 0;
+int main(void) {
+    int n, m;
+    cin >> n >> m;
+    cout << n + m;
+    return 0;
 };

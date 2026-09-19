@@ -2,20 +2,20 @@
 #include <string>
 using namespace std;
 
-int main() {
-  int t, l = 0;
-  string v[100], x;
-  cin >> t;
-  for (int i = 0; i < t; ++i) {
-    cin >> v[i];
-  }
-  cin >> x;
-  for (int i = 0; i < t; ++i) {
-    if (v[i] == x)
-      l += 1;
-  }
+int main(void) {
+    int count, occurrences = 0;
+    string words[100], target;
+    cin >> count;
+    for (int i = 0; i < count; ++i) {
+        cin >> words[i];
+    }
+    cin >> target;
+    for (int i = 0; i < count; ++i) {
+        if (words[i] == target)
+            occurrences += 1;
+    }
 
-  cout << l;
+    cout << occurrences;
 
-  return 0;
+    return 0;
 }

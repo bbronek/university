@@ -1,17 +1,18 @@
 #include <stdio.h>
 
-int power(int n, int m) {
-  int w = 1;
-  for (int i = 0; i < m; ++i) {
-    w *= n;
-  }
-  return (w);
+int power(int base, int exponent) {
+    int result = 1;
+    for (int i = 0; i < exponent; ++i) {
+        result *= base;
+    }
+    return (result);
 }
 
-int n, m;
-int main() {
-  scanf("%d%d", &n, &m);
-  printf("%d", power(n, m));
+int main(void) {
+    int base = 0, exponent = 0;
+    if (scanf("%d%d", &base, &exponent) != 2)
+        return 1;
+    printf("%d", power(base, exponent));
 
-  return 0;
+    return 0;
 }

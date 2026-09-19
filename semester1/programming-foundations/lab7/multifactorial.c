@@ -1,20 +1,22 @@
 #include <stdio.h>
 
-int main() {
-  int n;
-  scanf("%d", &n);
+int main(void) {
+    int case_count = 0;
+    if (scanf("%d", &case_count) != 1)
+        return 1;
 
-  while (n--) {
+    while (case_count--) {
 
-    int a, b;
+        int number = 0, step = 0;
 
-    scanf("%d %d", &a, &b);
-    int w = 1;
+        if (scanf("%d %d", &number, &step) != 2 || number < 0 || step <= 0)
+            return 1;
+        int result = 1;
 
-    for (int i = a; i >= b; i -= b) {
-      w *= i;
+        for (int i = number; i >= step; i -= step) {
+            result *= i;
+        }
+        printf("%d\n", result);
     }
-    printf("%d\n", w);
-  }
-  return 0;
+    return 0;
 }
