@@ -27,7 +27,8 @@ public class TicTacToeServer {
                 horizontal &= board[row * SIZE + column] == mark;
                 vertical &= board[column * SIZE + row] == mark;
             }
-            if (horizontal || vertical) return true;
+            if (horizontal || vertical)
+                return true;
             diagonal &= board[row * SIZE + row] == mark;
             reverseDiagonal &= board[row * SIZE + SIZE - row - 1] == mark;
         }
@@ -37,23 +38,26 @@ public class TicTacToeServer {
     private static List<Integer> availableMoves(char[] board) {
         List<Integer> moves = new ArrayList<>();
         for (int index = 0; index < board.length; index++) {
-            if (board[index] == 0) moves.add(index);
+            if (board[index] == 0)
+                moves.add(index);
         }
         return moves;
     }
 
     private static synchronized void recordWinner(String name) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of("results.txt"),
-                StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+        try (BufferedWriter writer =
+                 Files.newBufferedWriter(Path.of("results.txt"), StandardCharsets.UTF_8,
+                                         StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
             writer.write(name);
             writer.newLine();
         }
     }
 
     private static void play(Socket socket) {
-        try (socket;
-             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-             PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)) {
+        try (socket; BufferedReader input = new BufferedReader(
+                         new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+             PrintWriter output = new PrintWriter(
+                 new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)) {
             char[] board = new char[SIZE * SIZE];
             Random random = new Random();
             String name = null;
@@ -61,7 +65,8 @@ public class TicTacToeServer {
             output.println("WELCOME, STATE YOUR NAME");
             String command;
             while ((command = input.readLine()) != null) {
-                if (command.equals("QUIT")) return;
+                if (command.equals("QUIT"))
+                    return;
                 if (command.startsWith("LOGIN ") && name == null) {
                     name = command.substring(6).trim();
                     if (name.isEmpty()) {
@@ -75,9 +80,11 @@ public class TicTacToeServer {
                 }
                 int location;
                 try {
-                    if (name == null || !command.startsWith("MOVE ")) throw new NumberFormatException();
+                    if (name == null || !command.startsWith("MOVE "))
+                        throw new NumberFormatException();
                     location = Integer.parseInt(command.substring(5).trim());
-                    if (location < 0 || location >= board.length || board[location] != 0) throw new NumberFormatException();
+                    if (location < 0 || location >= board.length || board[location] != 0)
+                        throw new NumberFormatException();
                 } catch (NumberFormatException exception) {
                     output.println("ERROR");
                     continue;
@@ -94,18 +101,21 @@ public class TicTacToeServer {
                         int opponentMove = moves.get(random.nextInt(moves.size()));
                         board[opponentMove] = 'O';
                         output.println("OPPONENT " + opponentMove);
-                        if (hasWinner(board, 'O')) result = "LOST";
+                        if (hasWinner(board, 'O'))
+                            result = "LOST";
                     }
-                    if (result == null && availableMoves(board).isEmpty()) result = "DRAW";
+                    if (result == null && availableMoves(board).isEmpty())
+                        result = "DRAW";
                 }
                 if (result != null) {
                     output.println(result);
                     if (++completed == GAMES) {
-                        if (wins >= 75) recordWinner(name);
+                        if (wins >= 75)
+                            recordWinner(name);
                         output.println(wins >= 75 ? "SUCCESS" : "FAILED");
                         return;
                     }
-                    Arrays.fill(board, (char) 0);
+                    Arrays.fill(board, (char)0);
                     output.println("NEW GAME");
                 }
                 output.println("YOUR_TURN");

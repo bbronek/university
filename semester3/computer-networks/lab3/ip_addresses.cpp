@@ -12,6 +12,6 @@ int main() {
     }
     uint32_t value = ntohl(address.s_addr);
     std::printf("Host-order value: %u, hex=%08X\n", value, value);
-    std::printf("Bytes: %u %u %u %u\n", value >> 24, (value >> 16) & 255,
-                (value >> 8) & 255, value & 255);
+    std::printf("Bytes: %u %u %u %u\n", value >> 24, (value >> 16) & 255, (value >> 8) & 255,
+                value & 255);
 }

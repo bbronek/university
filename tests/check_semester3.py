@@ -24,6 +24,46 @@ def main():
     assert client["find_move"]([True, False]) == 1
     assert client["find_move"]([True] * 25) is None
     with tempfile.TemporaryDirectory() as temporary:
+        socket_test = Path(temporary) / "socket_io.cpp"
+        socket_test.write_text(r"""
+#include "socket_io.h"
+#include <cassert>
+#include <unistd.h>
+
+int main() {
+    int sockets[2];
+    assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sockets) == 0);
+    assert(send_all(sockets[0], "12"));
+    assert(send_all(sockets[0], "3\n456\n"));
+    std::string line;
+    assert(read_line(sockets[1], line) && line == "123");
+    assert(read_line(sockets[1], line) && line == "456");
+    assert(send_all(sockets[0], std::string(1024, 'x') + "\n"));
+    assert(read_line(sockets[1], line) && line.size() == 1024);
+    assert(send_all(sockets[0], std::string(1025, 'x') + "\n"));
+    assert(!read_line(sockets[1], line) && errno == EMSGSIZE);
+    close(sockets[1]);
+    assert(!send_all(sockets[0], "closed\n"));
+    assert(!read_line(sockets[0], line));
+    close(sockets[0]);
+}
+""")
+        executable = Path(temporary) / "socket_io"
+        subprocess.run(
+            [
+                "g++",
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-I",
+                str(SEMESTER / "computer-networks"),
+                str(socket_test),
+                "-o",
+                str(executable),
+            ],
+            check=True,
+        )
+        subprocess.run([str(executable)], check=True, timeout=5)
         for index, source in enumerate(SEMESTER.rglob("*.cpp")):
             subprocess.run(
                 [
