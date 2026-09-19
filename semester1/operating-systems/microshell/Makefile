@@ -1,8 +1,9 @@
-microshell: microshell.o
-	gcc -Wall -o microshell microshell.o -lm
+CC = cc
+CFLAGS = -std=c11 -Wall -Wextra -Wpedantic
 
-microshell.o: microshell.c
-	gcc -Wall -c -o microshell.o microshell.c 
+microshell: microshell.c
+	$(CC) $(CFLAGS) $< -o $@
 
-clean:;
-	rm -f microshell.o microshell
+.PHONY: clean
+clean:
+	rm -f microshell *.o

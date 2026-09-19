@@ -1,132 +1,128 @@
+class Node:
 
-class Node(object):
-
-    def __init__(self,data):
+    def __init__(self, data):
 
         self.data = data
-        self.leftChild = None
-        self.rightChild = None
+        self.left_child = None
+        self.right_child = None
 
-    def insert(self ,data):
+    def insert(self, data):
 
-        if data <self.data:
-            if not self.leftChild:
-                self.leftChild = Node(data)
+        if data < self.data:
+            if not self.left_child:
+                self.left_child = Node(data)
             else:
-                self.leftChild.insert(data)
+                self.left_child.insert(data)
         else:
-            if not self.rightChild:
-                self.rightChild = Node(data)
+            if not self.right_child:
+                self.right_child = Node(data)
             else:
-                self.rightChild.insert(data)
+                self.right_child.insert(data)
 
-    def remove(self,data,parentNode):
+    def remove(self, data, parent):
 
-        if data <self.data:
-            if self.leftChild is not None:
-                self.leftChild.remove(data,self)
+        if data < self.data:
+            if self.left_child is not None:
+                self.left_child.remove(data, self)
 
         elif data > self.data:
-            if self.rightChild is not None:
-                self.rightChild.remove(data,self)
+            if self.right_child is not None:
+                self.right_child.remove(data, self)
 
         else:
-            if self.leftChild is not None and self.rightChild is not None:
-                self.data = self.rightChild.getMin()
-                self.rightChild.remove(self.data ,self)
+            if self.left_child is not None and self.right_child is not None:
+                self.data = self.right_child.get_min()
+                self.right_child.remove(self.data, self)
 
-            elif parentNode.leftChild == self:
+            elif parent.left_child == self:
 
-                if self.leftChild is not None:
-                    tempNode = self.leftChild
+                if self.left_child is not None:
+                    temporary = self.left_child
 
                 else:
-                    tempNode = self.rightChild
-                
-                parentNode.leftChild = tempNode
+                    temporary = self.right_child
 
-            elif parentNode.rightChild ==self:
+                parent.left_child = temporary
 
-                if self.leftChild is not None:
-                    tempNode = self.leftChild
+            elif parent.right_child == self:
+
+                if self.left_child is not None:
+                    temporary = self.left_child
 
                 else:
-                    tempNode = self.rightChild
-                parentNode.rightChild = tempNode
+                    temporary = self.right_child
+                parent.right_child = temporary
 
-    def getMin(self):
+    def get_min(self):
 
-        if self.leftChild is None :
+        if self.left_child is None:
             return self.data
         else:
-            return self.leftChild.getMin()
-    
-    def getMax(self):
+            return self.left_child.get_min()
 
-        if self.rightChild is None:
+    def get_max(self):
+
+        if self.right_child is None:
             return self.data
         else:
-            return self.rightChild.getMax()
+            return self.right_child.get_max()
 
-    def traverseInOrder(self):
+    def traverse_in_order(self):
 
-        if self.leftChild is not None:
-            self.leftChild.traverseInOrder()
-        
+        if self.left_child is not None:
+            self.left_child.traverse_in_order()
+
         print(self.data)
 
-        if self.rightChild is not None:
-            self.rightChild.traverseInOrder()
-        
-class BST(object):
+        if self.right_child is not None:
+            self.right_child.traverse_in_order()
+
+
+class BST:
 
     def __init__(self):
 
-        self.rootNode = None
+        self.root = None
 
-    def insert(self,data):
+    def insert(self, data):
 
-        if not self.rootNode:
-            self.rootNode = Node(data)
+        if not self.root:
+            self.root = Node(data)
         else:
-            self.rootNode.insert(data)
+            self.root.insert(data)
 
-    def remove(self, dataToRemove):
+    def remove(self, data):
 
-        if self.rootNode:
+        if self.root:
 
-            if self.rootNode.data == dataToRemove:
-                tempNode = Node(None)
-                tempNode.leftChild = self.rootNode
-                self.rootNode.remove(dataToRemove,tempNode)
+            if self.root.data == data:
+                temporary = Node(None)
+                temporary.left_child = self.root
+                self.root.remove(data, temporary)
+                self.root = temporary.left_child
 
             else:
-                self.rootNode.remove(dataToRemove, None)
+                self.root.remove(data, None)
 
-    def getMax(self):
+    def get_max(self):
 
-        if self.rootNode:
-            return self.rootNode.getMax()
+        if self.root:
+            return self.root.get_max()
 
-    def getMin(self):
+    def get_min(self):
 
-        if self.rootNode:
-            return self.rootNode.getMin()
+        if self.root:
+            return self.root.get_min()
 
-    def traverseInOrder(self):
+    def traverse_in_order(self):
 
-        if self.rootNode:
-            self.rootNode.traverseInOrder()
-    
+        if self.root:
+            self.root.traverse_in_order()
 
-bst = BST()
 
-bst.insert(12)
-bst.insert(1)
-bst.insert(9)
-bst.remove(1)
-bst.insert(-7)
-
-#bst.traverseInOrder()
-print(bst.getMin())
-
+if __name__ == "__main__":
+    bst = BST()
+    for value in (12, 1, 9, -7):
+        bst.insert(value)
+    bst.remove(1)
+    print(bst.get_min())

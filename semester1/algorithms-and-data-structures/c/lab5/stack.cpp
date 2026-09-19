@@ -1,77 +1,35 @@
-#include<iostream>
-#include<string>
-using namespace std;
-int stack[100],size = 0;
-void push(int x)
-{
-    stack[size] = x;
-    size++;
-}
-int pop()
-{
-    size--;
-    return stack[size];
-}
-int empty()
-{
-    if(size==0) return 1;
-    return 0;
-}
-int full()
-{
-    if(size==100) return 1;
-    return 0;
-}
+#include <iostream>
+#include <string>
+#include <vector>
 
-string c;
-int x,b=0;
-int main()
-{
-
-    do
-    {
-        cin>>c;
-        if(c=="PUSH")
-        {
-            if(full())
-            {
-                b =1;
-            }
-            else
-            {
-                cin>>x;
-                push(x);
-            }
-
-
-        }
-        if(c=="POP")
-        {
-            if(empty())
-            {
-                b =1;
-            }
-            else
-            {
-                pop();
-            }
-        }
-
-    }while(c!="END");
-
-    if(b==1)
-    {
-        cout<<"error";
-        return 0;
+int main() {
+  std::vector<int> values;
+  std::string command;
+  bool failed = false;
+  while (std::cin >> command && command != "END") {
+    if (command == "PUSH") {
+      int value;
+      if (!(std::cin >> value))
+        return 1;
+      if (values.size() == 100)
+        failed = true;
+      else
+        values.push_back(value);
+    } else if (command == "POP") {
+      if (values.empty())
+        failed = true;
+      else
+        values.pop_back();
+    } else {
+      return 1;
     }
-
-
-    for(int i=size-1;i>=0;--i)
-    {
-        cout<<stack[i]<<endl;
-    }
-
-
-
+  }
+  if (failed) {
+    std::cout << "error\n";
     return 0;
+  }
+  while (!values.empty()) {
+    std::cout << values.back() << '\n';
+    values.pop_back();
+  }
 }

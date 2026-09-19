@@ -1,29 +1,19 @@
+#include <limits.h>
 #include <stdio.h>
-#include <math.h>
 
-int np(int n)
-{
-    if(n%2) return 1;
-    return 0;
-}
-
-int n,x,maxi=0,max_index;
-int main()
-{
-    scanf("%d",&n);
-    for(int i =0 ;i<n;++i)
-    {
-        scanf("%d",&x);
-        if(x>maxi)
-        {
-            maxi=x;
-            max_index = i+1;
-        }
-
-
+int main(void) {
+  int count, maximum = INT_MIN, maximum_index = 0;
+  if (scanf("%d", &count) != 1 || count <= 0)
+    return 1;
+  for (int index = 1; index <= count; ++index) {
+    int value;
+    if (scanf("%d", &value) != 1)
+      return 1;
+    if (value > maximum || maximum_index == 0) {
+      maximum = value;
+      maximum_index = index;
     }
-    printf("%d %d",maxi,max_index);
-
-
-    return 0;
+  }
+  printf("%d %d\n", maximum, maximum_index);
+  return 0;
 }

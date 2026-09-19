@@ -1,21 +1,18 @@
 #include <stdio.h>
 
-int odw(int n)
-{
-    while(n)
-    {
-        printf("%d",n%10);
-        n/=10;
-    }
-
+void print_reversed(int n) {
+  if (n == 0)
+    printf("0");
+  while (n) {
+    printf("%d", n % 10);
+    n /= 10;
+  }
 }
 
 int n;
-int main()
-{
-    scanf("%d",&n);
-    odw(n);
+int main() {
+  scanf("%d", &n);
+  print_reversed(n);
 
-
-    return 0;
+  return 0;
 }
