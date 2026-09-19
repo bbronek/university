@@ -18,7 +18,7 @@ describe Bank::Atm::AtmProcessHandler do
       expect(handler).to be_an_instance_of(Bank::Atm::AtmProcessHandler)
     end
 
-    it 'should return array of errors if pin is invalid' do
+    it 'returns nil if the card is invalid' do
       sample_customer = Bank::Customer.create('John', 'Doe')
       payment_card = Bank::Cards::PaymentCard.create('invalid', sample_customer.id)
       bank_account = Bank::BankAccount.new(sample_customer.id, 10_000)
@@ -53,12 +53,12 @@ describe Bank::Atm::AtmProcessHandler do
       amount = 15_000
       handler.withdraw(amount)
 
-      expect(handler.errors).to eq(["Insufficient resources to perform witdraw operation"])
+      expect(handler.errors).to eq(["Insufficient funds for withdrawal"])
     end
   end
 
   describe '#deposit' do
-    it 'should depose given resources' do
+    it 'deposits the given amount' do
       sample_customer = Bank::Customer.create('John', 'Doe')
       payment_card = Bank::Cards::PaymentCard.create('1234', sample_customer.id)
       bank_account = Bank::BankAccount.new(sample_customer.id, 10_000)

@@ -9,6 +9,8 @@ module Bank
       attr_reader :errors
 
       def self.handle(card, bank_account)
+        return unless card && card.owner_id == bank_account.owner_id
+
         new(bank_account) if Cards::BankCard::PinValidator.validate(card.pin).empty?
       end
 
@@ -28,6 +30,8 @@ module Bank
       end
 
       def buy_pre_paid_codes(number)
+        raise ArgumentError, "Code count must be a positive integer" unless number.is_a?(Integer) && number.positive?
+
         price = 50
         @bank_account.withdrawal(price * number)
       end
@@ -37,6 +41,8 @@ module Bank
       end
 
       def transfer(transfer_account, amount)
+        raise ArgumentError, "Expected a bank account" unless transfer_account.is_a?(Bank::BankAccount)
+
         @bank_account.withdrawal(amount)
         transfer_account.payment(amount)
       end

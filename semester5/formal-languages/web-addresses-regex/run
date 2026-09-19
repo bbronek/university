@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+grep -Ec '^(https?://)?([[:alnum:]]([[:alnum:]-]*[[:alnum:]])?\.)+[[:alpha:]]{2,}(:[0-9]{1,5})?([/?#][^[:space:]]*)?$'

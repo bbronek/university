@@ -1,4 +1,4 @@
-tak
-nie
-tak
-nie
+yes
+no
+yes
+no

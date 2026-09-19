@@ -1,39 +1,46 @@
 #!/usr/bin/env ruby
+require 'set'
 
 class Parser
   def initialize(grammar_file)
-    @rules = {}
-    @start_symbol = nil
+    @rules = Hash.new { |rules, symbol| rules[symbol] = [] }
     File.foreach(grammar_file) do |line|
-      left, right = line.strip.split(" -> ")
-      @rules[left] ||= []
-      @rules[left] << right.split(" ")
+      next if line.strip.empty?
+
+      left, right = line.strip.split(/\s*->\s*/, 2)
+      raise ArgumentError, 'Expected a grammar rule: symbol -> symbols' unless right
+
       @start_symbol ||= left
+      @rules[left] << right.split
     end
+    raise ArgumentError, 'The grammar is empty' unless @start_symbol
   end
 
   def parse(input)
-    input = input.gsub(/\s+/, "")
-    stack = [@start_symbol]
-    input_index = 0
-    while !stack.empty?
-      top = stack.pop
-      if top =~ /[A-Z]/
-        return false if @rules[top].nil?
-        @rules[top].each do |rule|
-          rule.reverse.each { |symbol| stack << symbol }
-        end
-      else
-        return false if input[input_index] != top
-        input_index += 1
-      end
+    input = input.gsub(/\s+/, '')
+    match(@start_symbol, input, 0, Set.new).include?(input.length)
+  end
+
+  private
+
+  def match(symbol, input, position, active)
+    unless @rules.key?(symbol)
+      return input[position, symbol.length] == symbol ? [position + symbol.length] : []
     end
-    input_index == input.size
+
+    state = [symbol, position]
+    return [] if active.include?(state)
+
+    active = active | [state]
+    @rules[symbol].flat_map do |rule|
+      rule.reduce([position]) do |positions, item|
+        positions.flat_map { |offset| match(item, input, offset, active) }.uniq
+      end
+    end.uniq
   end
 end
 
-# test
-grammar_file = 'gramatyka.txt'
-parser = Parser.new(grammar_file)
-input_string = gets.chomp
-puts parser.parse(input_string) ? "tak" : "nie"
+if $PROGRAM_NAME == __FILE__
+  parser = Parser.new(ARGV.fetch(0, File.join(__dir__, 'grammar.txt')))
+  $stdin.each_line { |line| puts(parser.parse(line) ? 'yes' : 'no') }
+end

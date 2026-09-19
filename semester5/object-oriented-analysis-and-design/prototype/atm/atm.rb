@@ -1,3 +1,5 @@
+require_relative 'atm_process_handler'
+
 module Bank
   module Atm
     class Atm

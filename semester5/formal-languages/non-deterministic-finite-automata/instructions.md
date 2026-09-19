@@ -1,8 +1,12 @@
-## 1. Run non-deterministic finite automata
-    cat input.txt | ./run automat.txt > output.txt
-## 2. Sample files
-`automat.1.txt` and `automat.3.txt` contains automata descriptions (connections between states)
+# Nondeterministic finite automata
 
-`in.1.txt` and `in.2.txt` are inputs for automata 1 and automata 3
+Run an example from this directory:
 
-`out.1.txt` and `out.2.txt` contains correctly outputs
+```sh
+./run automaton.1.txt < in.1.txt
+```
+
+State `0` is the start state. A line containing one state marks an accepting
+state; a three-field line defines `source destination character`.
+Each input line is a separate word. The output is `yes` or `no`.
+Both `1` and `3` have matching `automaton`, `in`, and `out` sample files.

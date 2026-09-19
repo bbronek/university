@@ -1,6 +1,6 @@
-nie
-nie
-nie
-tak
-tak
-nie
+no
+no
+no
+yes
+yes
+no
