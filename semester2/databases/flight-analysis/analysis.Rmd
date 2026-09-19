@@ -1,116 +1,118 @@
 ---
 title: "Flight Delay Analysis"
 author: "Bartosz Bronikowski"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
 output:
   pdf_document: default
   html_document: default
   word_document: default
 ---
 
-```{r setup,echo =FALSE, include=TRUE, cache = FALSE}
+```{r setup, include=FALSE}
 library(DBI)
 library(odbc)
-con <- dbConnect(odbc(), 
-                 Driver = Sys.getenv("ODBC_DRIVER"),
-                 Server = Sys.getenv("DB_SERVER"),
-                 Database = Sys.getenv("DBNAME"),
-                 Trusted_Connection = "True")
-knitr::opts_chunk$set(echo = TRUE)
+
+settings <- Sys.getenv(c("ODBC_DRIVER", "DB_SERVER", "DBNAME"))
+stopifnot(all(nzchar(settings)))
+connection <- dbConnect(
+  odbc(),
+  Driver = settings[["ODBC_DRIVER"]],
+  Server = settings[["DB_SERVER"]],
+  Database = settings[["DBNAME"]],
+  Trusted_Connection = "True"
+)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{sql,echo =FALSE, connection=con,output.var="d1"}
-Select avg(arr_delay_new) From Flight_delays;
+## Arrival delays
+
+All delay values are in minutes.
+
+```{sql connection=connection, output.var="delay_summary"}
+SELECT AVG(arr_delay_new) AS average_delay,
+       MAX(arr_delay_new) AS maximum_delay
+FROM Flight_delays;
 ```
 
-
-```{sql,echo =FALSE, connection=con,output.var="d2"}
-Select max(arr_delay_new) From Flight_delays;
-```
-```{sql,echo =FALSE, connection=con,output.var="d3"}
-select  arr_delay_new,fl_date,carrier, origin_city_name,dest_city_name
-from Flight_delays
-where arr_delay_new = (select max(arr_delay_new) from Flight_delays);
+```{r}
+knitr::kable(delay_summary)
 ```
 
-```{sql,echo =FALSE, connection=con,output.var="d4"}
-select  avg(arr_delay_new) as avg_delay,weekday_name
-from Weekdays
-         inner join Flight_delays on weekday_id = Flight_delays.day_of_week
-group by weekday_name
-order by [avg_delay] desc;
-```
-```{sql,echo =FALSE, connection=con,output.var="d5"}
-select avg(arr_delay_new) as avg_delay,airline_name
-from Flight_delays
-         inner join Airlines A on Flight_delays.airline_id = A.airline_id
-group by airline_name
-order by [avg_delay] desc;
+## Flights with the longest delay
+
+```{sql connection=connection, output.var="longest_delays"}
+SELECT fl_date, carrier, origin_city_name, dest_city_name, arr_delay_new
+FROM Flight_delays
+WHERE arr_delay_new = (SELECT MAX(arr_delay_new) FROM Flight_delays);
 ```
 
-
-```{sql,echo =FALSE, connection=con,output.var="d7"}
-select ((SUM(arr_delay_new * dep_delay_new)
-    - (SUM(arr_delay_new) * SUM(dep_delay_new)) / COUNT(*)
-    )
-           )
-           / (SQRT(SUM(arr_delay_new * arr_delay_new)
-        - (SUM(arr_delay_new) * SUM(arr_delay_new)) / COUNT(*)
-                  )
-        * SQRT(SUM(dep_delay_new * dep_delay_new)
-            - (SUM(dep_delay_new) * SUM(dep_delay_new)) / COUNT(*)
-                  )
-           ) as 'Pearsons r'
-from Flight_delays;
-```
-```{sql,echo =FALSE, connection=con,output.var="d8"}
-select avg(arr_delay_new) from Flight_delays
-where day_of_month <= 23
-group by airline_id;
+```{r}
+knitr::kable(longest_delays)
 ```
 
-avg_delay  
-`-------------`  
-`r d1`  
-  
-max_delay  
-`-------------`  
-`r d2` 
+## Average arrival delay by weekday
 
-carrier
-origin_city_name
-dest_city_name
-fl_date
-arr_delay_new  
-`------`
-`----------------`
-`---------------`
-`-------`
-`------------`  
-`r d3`
- 
-weekday_name
-avg_delay  
-`------------`
-`--------`  
-`r d4$weekday_name`  
-`r d4$avg_delay`  
-airline_name
-avg_delay  
-`-------------------  ---------------`  
-`r d5$airline_name`  
-`r d5$avg_delay`  
-  
- 
-  
-Pearsons r  
-`-------------`  
-`r d7`  
-  
+```{sql connection=connection, output.var="weekday_delays"}
+SELECT weekday_name, AVG(arr_delay_new) AS average_delay
+FROM Weekdays
+INNER JOIN Flight_delays ON weekday_id = Flight_delays.day_of_week
+GROUP BY weekday_name
+ORDER BY average_delay DESC;
+```
 
+```{r}
+knitr::kable(weekday_delays)
+```
 
+## Average arrival delay by airline
 
+```{sql connection=connection, output.var="airline_delays"}
+SELECT airline_name, AVG(arr_delay_new) AS average_delay
+FROM Flight_delays
+INNER JOIN Airlines ON Flight_delays.airline_id = Airlines.airline_id
+GROUP BY airline_name
+ORDER BY average_delay DESC;
+```
+
+```{r}
+knitr::kable(airline_delays)
+```
+
+## Correlation between arrival and departure delays
+
+```{sql connection=connection, output.var="delay_correlation"}
+WITH delays AS (
+    SELECT CAST(arr_delay_new AS FLOAT) AS arrival,
+           CAST(dep_delay_new AS FLOAT) AS departure
+    FROM Flight_delays
+    WHERE arr_delay_new IS NOT NULL AND dep_delay_new IS NOT NULL
+)
+SELECT (SUM(arrival * departure) - SUM(arrival) * SUM(departure) / COUNT(*))
+       / NULLIF(
+           SQRT(SUM(arrival * arrival) - SUM(arrival) * SUM(arrival) / COUNT(*))
+           * SQRT(SUM(departure * departure) - SUM(departure) * SUM(departure) / COUNT(*)),
+           0
+       ) AS pearson_correlation
+FROM delays;
+```
+
+```{r}
+knitr::kable(delay_correlation)
+```
+
+## Average arrival delay through day 23
+
+```{sql connection=connection, output.var="early_month_delays"}
+SELECT airline_id, AVG(arr_delay_new) AS average_delay
+FROM Flight_delays
+WHERE day_of_month <= 23
+GROUP BY airline_id;
+```
+
+```{r}
+knitr::kable(early_month_delays)
+```
 
 ```{r disconnect, include=FALSE}
-dbDisconnect(con)
+dbDisconnect(connection)
 ```
