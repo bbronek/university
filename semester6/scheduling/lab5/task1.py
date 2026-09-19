@@ -1,21 +1,20 @@
-def choose_available_official(oficials_times):
-    return oficials_times.index(min(oficials_times))
+def least_loaded_machine(machine_loads):
+    return machine_loads.index(min(machine_loads))
 
 
-m, n = map(int, input().split())
+def main():
+    m, n = map(int, input().split())
+    machine_loads = [0 for i in range(m)]
+    tasks = []
+    for i in range(n):
+        tasks.append(int(input()))
+    available_machine = 0
+    tasks.sort(reverse=True)
+    for task in tasks:
+        machine_loads[available_machine] += task
+        available_machine = least_loaded_machine(machine_loads)
+    print(max(machine_loads))
 
-officials_times = [0 for i in range(m)]
-tasks = []
 
-for i in range(n):
-    tasks.append(int(input()))
-
-available_official = 0
-
-tasks.sort(reverse=True)
-
-for task in tasks:
-    officials_times[available_official] += task
-    available_official = choose_available_official(officials_times)
-
-print(max(officials_times))
+if __name__ == "__main__":
+    main()

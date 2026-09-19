@@ -1,23 +1,23 @@
-def flatten(l):
-    return [item for sublist in l for item in sublist]
+def flatten_dependencies(groups):
+    return [item for group in groups for item in group]
 
 
-def sort_dict(d):
-    sorted_by_priority = sorted(d.items(), key=lambda x: x[1][0])
+def sort_dict(mapping):
+    sorted_by_priority = sorted(mapping.items(), key=lambda x: x[1][0])
     converted_dict = dict(sorted_by_priority)
 
     return converted_dict
 
 
-def find_available_task(time_dict, order_dict, done_tasks, n):
-    chosen_one = -1
-    blocked = flatten(list(order_dict.values()))
+def find_available_task(time_dict, order_dict, completed, n):
+    selected = -1
+    blocked = flatten_dependencies(list(order_dict.values()))
 
-    for t in time_dict:
-        if not (t in blocked) and not (t in done_tasks):
-            chosen_one = t
+    for task in time_dict:
+        if not (task in blocked) and not (task in completed):
+            selected = task
             break
-    return chosen_one
+    return selected
 
 
 def solver():
@@ -28,35 +28,35 @@ def solver():
     n = int(input())
 
     for i in range(1, n + 1):
-        r, p = list(map(int, input().split()))
-        time_dict[i] = [r, p]
+        release_time, processing_time = list(map(int, input().split()))
+        time_dict[i] = [release_time, processing_time]
 
     e = int(input())
 
     for i in range(1, e + 1):
-        k, l = list(map(int, input().split()))
-        if not (k in order_dict):
-            order_dict[k] = [l]
+        predecessor, successor = list(map(int, input().split()))
+        if not (predecessor in order_dict):
+            order_dict[predecessor] = [successor]
         else:
-            order_dict[k].append(l)
+            order_dict[predecessor].append(successor)
 
     time_dict = sort_dict(time_dict)
 
-    done_tasks = []
+    completed = []
 
-    while len(done_tasks) != n:
-        t = find_available_task(time_dict, order_dict, done_tasks, n)
-        if t == -1:
+    while len(completed) != n:
+        task = find_available_task(time_dict, order_dict, completed, n)
+        if task == -1:
             raise ValueError("Task dependencies contain a cycle")
-        done_tasks.append(t)
+        completed.append(task)
 
-        if total_time < time_dict[t][0]:
-            total_time = time_dict[t][0]
+        if total_time < time_dict[task][0]:
+            total_time = time_dict[task][0]
 
-        total_time += time_dict[t][1]
+        total_time += time_dict[task][1]
 
-        if t in order_dict:
-            del order_dict[t]
+        if task in order_dict:
+            del order_dict[task]
 
     print(total_time)
 

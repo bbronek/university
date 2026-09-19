@@ -1,17 +1,17 @@
-def flatten(l):
-    return [item for sublist in l for item in sublist]
+def flatten_dependencies(groups):
+    return [item for sublist in groups for item in sublist]
 
 
-def find_available_task(order_dict, done_tasks, n):
-    chosen_one = -1
-    blockers = flatten(list(order_dict.values()))
+def find_available_task(order_dict, completed, n):
+    selected = -1
+    blocked = flatten_dependencies(list(order_dict.values()))
 
     for i in range(1, n + 1):
-        if not (i in blockers) and not (i in done_tasks):
-            chosen_one = i
+        if not (i in blocked) and not (i in completed):
+            selected = i
             break
 
-    return chosen_one
+    return selected
 
 
 def solver(n, m):
@@ -24,26 +24,26 @@ def solver(n, m):
         time_dict[i] = time
 
     for i in range(m):
-        succ, pre = list(map(int, input().split()))
+        predecessor, successor = list(map(int, input().split()))
 
-        if not (succ in order_dict):
-            order_dict[succ] = [pre]
+        if not (predecessor in order_dict):
+            order_dict[predecessor] = [successor]
         else:
-            order_dict[succ].append(pre)
+            order_dict[predecessor].append(successor)
 
-    done_tasks = []
+    completed = []
 
-    while len(done_tasks) != n:
-        t = find_available_task(order_dict, done_tasks, n)
-        if t == -1:
+    while len(completed) != n:
+        task = find_available_task(order_dict, completed, n)
+        if task == -1:
             raise ValueError("Task dependencies contain a cycle")
-        done_tasks.append(t)
+        completed.append(task)
 
-        total_time += time_dict[t]
+        total_time += time_dict[task]
 
-        if t in order_dict:
-            del order_dict[t]
-        print(t)
+        if task in order_dict:
+            del order_dict[task]
+        print(task)
 
     print(total_time)
 

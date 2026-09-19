@@ -11,12 +11,14 @@ def spt_scheduling(m, n, processing_times):
     return sum(job_completion_times)
 
 
-m, n = list(map(int, input().split()))
-processing_times = []
+def main():
+    m, n = list(map(int, input().split()))
+    processing_times = []
+    for i in range(n):
+        processing_times.append(int(input()))
+    total_completion_time = spt_scheduling(m, n, processing_times)
+    print(total_completion_time)
 
-for i in range(n):
-    processing_times.append(int(input()))
 
-total_completion_time = spt_scheduling(m, n, processing_times)
-
-print(total_completion_time)
+if __name__ == "__main__":
+    main()

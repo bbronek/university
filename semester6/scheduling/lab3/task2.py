@@ -1,61 +1,57 @@
-def calculate_cost(time_dict, time, task):
-    return (
-        time_dict[task][1] * time * time
-        + time_dict[task][2] * time
-        + time_dict[task][3]
-    )
+def calculate_cost(jobs, time, task):
+    return jobs[task][1] * time * time + jobs[task][2] * time + jobs[task][3]
 
 
 def solver():
     n = int(input())
-    times = 0
-    time_dict = {}
-    order_dict = {}
-    succ_number = {}
+    remaining_time = 0
+    jobs = {}
+    predecessors = {}
+    successor_count = {}
     available_tasks = []
     maximum_cost = 0
 
     for i in range(1, n + 1):
         p, a, b, c = list(map(int, input().split()))
-        time_dict[i] = [p, a, b, c]
-        times += p
-        succ_number[i] = 0
-        order_dict[i] = []
+        jobs[i] = [p, a, b, c]
+        remaining_time += p
+        successor_count[i] = 0
+        predecessors[i] = []
 
     e = int(input())
 
     for i in range(1, e + 1):
         k, l = list(map(int, input().split()))
-        order_dict[l].append(k)
+        predecessors[l].append(k)
 
-        succ_number[k] += 1
+        successor_count[k] += 1
 
     for i in range(1, n + 1):
         for i in range(1, n + 1):
-            if succ_number[i] == 0:
+            if successor_count[i] == 0:
                 available_tasks.append(i)
-                succ_number[i] = -1
+                successor_count[i] = -1
 
         if not available_tasks:
             raise ValueError("Task dependencies contain a cycle")
-        min = calculate_cost(time_dict, times, available_tasks[0])
-        mini = 0
+        minimum_cost = calculate_cost(jobs, remaining_time, available_tasks[0])
+        selected_index = 0
 
         for i in range(1, len(available_tasks)):
-            cost = calculate_cost(time_dict, times, available_tasks[i])
+            cost = calculate_cost(jobs, remaining_time, available_tasks[i])
 
-            if cost <= min:
-                min = cost
-                mini = i
+            if cost <= minimum_cost:
+                minimum_cost = cost
+                selected_index = i
 
-        if min >= maximum_cost:
-            maximum_cost = min
+        if minimum_cost >= maximum_cost:
+            maximum_cost = minimum_cost
 
-        for x in order_dict[available_tasks[mini]]:
-            succ_number[x] -= 1
+        for x in predecessors[available_tasks[selected_index]]:
+            successor_count[x] -= 1
 
-        times -= time_dict[available_tasks[mini]][0]
-        del available_tasks[mini]
+        remaining_time -= jobs[available_tasks[selected_index]][0]
+        del available_tasks[selected_index]
 
     print(maximum_cost)
 
